@@ -3,10 +3,19 @@ import {
   StyleSheet,
   View,
   TextInput,
+  InputAccessoryView,
+  Text,
 } from "react-native";
 
 const LetterTile = props => {
-  const [value, onChangeText] = React.useState();
+  
+  const inputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if(props.nextFocus && props.nextFocus[0] == props.rowIndex && props.nextFocus[1] == props.index) {
+      inputRef.current.focus();
+    }
+  }, [props.nextFocus]);
 
   const onTouchEnd = () => {
     // explicit "!= null" so that 0 index is not false
@@ -31,22 +40,48 @@ const LetterTile = props => {
     } 
   }
 
+  const onKeyPress = (e) => {
+    if (e.nativeEvent.key === 'Backspace') {
+      props.setValue(props.rowIndex, props.index, '');
+      props.setNextFocus(props.rowIndex, props.index, -1);
+    } else {
+      props.setValue(props.rowIndex, props.index, e.nativeEvent.key);
+      // move to next letter
+      props.setNextFocus(props.rowIndex, props.index, 1);
+    }
+    console.log('onKeyPress event.key: '+e.nativeEvent.key)
+    console.log('should be key: '+props.tileData.letter)
+    console.log('hint: '+props.words[props.focusedWordIndex]?.hint)
+  }
+
   return props.tileData.letter ? (
-    <TextInput
-      style={[
-        styles.letterTile,
-        (props.focusedWordIndex == props.tileData.horizontalWordIndex ||
-          props.focusedWordIndex == props.tileData.verticalWordIndex) &&
-          styles.letterTileWordIsFocused,
-        (props.focusedLetterIndex === props.index && props.rowIndex === props.focusedRowIndex) &&
-        styles.letterTileLetterIsFocused,
-      ]}
-      autoCorrect={false}
-      onChangeText={text => onChangeText(text)}
-      value={value}
-      maxLength={1}
-      onTouchEnd={onTouchEnd}
-    />
+    <View>
+      <TextInput
+        style={[
+          styles.letterTile,
+          (props.focusedWordIndex == props.tileData.horizontalWordIndex ||
+            props.focusedWordIndex == props.tileData.verticalWordIndex) &&
+            styles.letterTileWordIsFocused,
+          (props.focusedLetterIndex === props.index && props.rowIndex === props.focusedRowIndex) &&
+          styles.letterTileLetterIsFocused,
+        ]}
+        autoCorrect={false}
+        autoCapitalize='characters'
+        value={props.value}
+        maxLength={1}
+        onTouchEnd={onTouchEnd}
+        caretHidden={true}
+        ref={props.index + ','+props.rowIndex}
+        inputAccessoryViewID={props.index + ','+props.rowIndex}
+        onKeyPress={onKeyPress}
+        ref={inputRef}
+      />
+      <InputAccessoryView nativeID={props.index + ','+props.rowIndex}>
+        <View style={styles.hintBar} >
+            <Text style={styles.hint} >{props.words[props.focusedWordIndex]?.hint}</Text>
+        </View>
+      </InputAccessoryView>
+    </View>
   ) : (
     <View style={styles.blankTile} />
   );
@@ -76,5 +111,22 @@ const styles = StyleSheet.create({
     height: TILE_HEIGHT,
     width: TILE_WIDTH,
     backgroundColor: '#D0D0D0'
+  },
+  hintBar: {
+    flex: 1,
+    height: 45,
+    width: '100%',
+    backgroundColor: 'lightblue',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+  hint: {
+    //position: 'absolute',
+    fontSize: 24,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center'
   }
 });

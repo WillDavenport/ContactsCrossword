@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
-import LetterTile from './components/letterTile'
 import { generateCrossword } from './services/generateCrossword';
 import CrosswordView from './components/crosswordView';
 import * as Contacts from 'expo-contacts';
@@ -9,6 +8,7 @@ import { createGameWords } from './services/createGameWords';
 
 export default function App() {
   const [haveGrid, setHaveGrid] = React.useState(false); 
+  const [contacts, setContacts] = React.useState([]);
   const [grid, setGrid] = React.useState([]);
   const [gridWords, setGridWords] = React.useState([]); 
 
@@ -22,18 +22,17 @@ export default function App() {
 
         if (data.length > 0) {
           let formattedContacts = trimContactsData(data);
-          console.log('FormattedContacts length: ',formattedContacts.length)
+          setContacts(formattedContacts);
           
-          generateGame(formattedContacts, 10, 10);
+          generateGame(10, 10);
         }
       }
     })();
   }
 
-  const generateGame = (formattedContacts, gridRows, gridColumns) => {
-    let words = createGameWords(formattedContacts, gridRows, gridColumns);
-    
-    console.log('words to add length: ',words.length)
+  const generateGame = ( gridRows, gridColumns) => {
+    let words = createGameWords(contacts, gridRows, gridColumns);
+
     setGrid(generateCrossword(words, gridRows, gridColumns));
     setGridWords(words);
     setHaveGrid(true);
@@ -50,6 +49,7 @@ export default function App() {
         <CrosswordView 
           grid={grid}
           words={gridWords}
+          newGamePressed={() => generateGame(10,10)}
         />
       )}
     </View>

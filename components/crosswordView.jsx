@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import Grid from './grid'
 
 const CrosswordView = (props) => {
@@ -9,7 +9,11 @@ const CrosswordView = (props) => {
   return (
     <View style={styles.container}>
         <View style={styles.hintBar} >
-            <Text style={styles.hint} >{props.words[currentWordIndex]?.hint}</Text>
+            <Button 
+                style={styles.newGameButton}
+                title="New Game" 
+                onPress={props.newGamePressed}
+            />
         </View>
       <Grid
         grid={props.grid}
@@ -24,25 +28,20 @@ export default CrosswordView;
 const styles = StyleSheet.create({
   container: {
     //flex: 1,
-    backgroundColor: 'lightblue',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
   hintBar: {
       flex: 1,
-      height: 40,
+      height: 10,
       width: '100%',
-      backgroundColor: 'lightblue',
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
   },
-  hint: {
-      //position: 'absolute',
-      fontSize: 24,
-      width: '100%',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center'
+  newGameButton: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   }
 });

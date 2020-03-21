@@ -20,7 +20,10 @@ export function createGameWords(formattedContacts, gridRows, gridColumns) {
             const hintIndex = Math.floor(Math.random() * Math.floor(contact.possibleHints.length));
             //console.log('hint Index: ',hintIndex);
             if (word.length <= gridRows && word.length <= gridColumns) {
-                words.push({text: word.split(''), hint: contact.possibleHints[hintIndex]});
+                console.log('SET HINT: ',contact.possibleHints[hintIndex])
+                if (word != contact.possibleHints[hintIndex]) {
+                    words.push({text: word.split(''), hint: contact.possibleHints[hintIndex]});
+                }
             }
         }
     }
