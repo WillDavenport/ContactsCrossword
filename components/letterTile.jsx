@@ -1,132 +1,239 @@
-import React from "react";
+import React, { Component } from "react";
 import {
   StyleSheet,
   View,
   TextInput,
   InputAccessoryView,
   Text,
+  Button
 } from "react-native";
 
-const LetterTile = props => {
-  
-  const inputRef = React.useRef(null);
+class LetterTile extends Component {
+  constructor(props) {
+    super(props);
+    this.inputRef = React.createRef();
+  }
 
-  React.useEffect(() => {
-    if(props.nextFocus && props.nextFocus[0] == props.rowIndex && props.nextFocus[1] == props.index) {
-      inputRef.current.focus();
+  state = {
+    value: this.props.value
+  };
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.nextFocus !== prevProps.nextFocus &&
+      this.props.nextFocus[0] == this.props.rowIndex &&
+      this.props.nextFocus[1] == this.props.index
+    ) {
+      this.inputRef.current.focus();
     }
-  }, [props.nextFocus]);
+    if (this.props.value !== prevProps.value) {
+      this.setState({ value: this.props.value });
+    }
+  }
 
-  const onTouchEnd = () => {
+  onTouchEnd = () => {
     // explicit "!= null" so that 0 index is not false
-    if (props.tileData.horizontalWordIndex != null && props.tileData.verticalWordIndex == null) {
-      props.letterFocus(props.tileData.horizontalWordIndex, props.rowIndex, props.index, false);
-    } else if (props.tileData.horizontalWordIndex == null && props.tileData.verticalWordIndex != null) {
-      props.letterFocus(props.tileData.verticalWordIndex, props.rowIndex, props.index, true);
-    } else if (props.tileData.horizontalWordIndex != null && props.tileData.verticalWordIndex != null) {
-      if (props.focusedLetterIndex === props.index && props.rowIndex === props.focusedRowIndex) {
-        if (props.isCurrentFocusVertical) { // do the opposite of current focus if we're touching the same tile again
-          props.letterFocus(props.tileData.horizontalWordIndex, props.rowIndex, props.index, false);
+    if (
+      this.props.tileData.horizontalWordIndex != null &&
+      this.props.tileData.verticalWordIndex == null
+    ) {
+      this.props.letterFocus(
+        this.props.tileData.horizontalWordIndex,
+        this.props.rowIndex,
+        this.props.index,
+        false
+      );
+    } else if (
+      this.props.tileData.horizontalWordIndex == null &&
+      this.props.tileData.verticalWordIndex != null
+    ) {
+      this.props.letterFocus(
+        this.props.tileData.verticalWordIndex,
+        this.props.rowIndex,
+        this.props.index,
+        true
+      );
+    } else if (
+      this.props.tileData.horizontalWordIndex != null &&
+      this.props.tileData.verticalWordIndex != null
+    ) {
+      if (
+        this.props.focusedLetterIndex === this.props.index &&
+        this.props.rowIndex === this.props.focusedRowIndex
+      ) {
+        if (this.props.isCurrentFocusVertical) {
+          // do the opposite of current focus if we're touching the same tile again
+          this.props.letterFocus(
+            this.props.tileData.horizontalWordIndex,
+            this.props.rowIndex,
+            this.props.index,
+            false
+          );
         } else {
-          props.letterFocus(props.tileData.verticalWordIndex, props.rowIndex, props.index, true);
+          this.props.letterFocus(
+            this.props.tileData.verticalWordIndex,
+            this.props.rowIndex,
+            this.props.index,
+            true
+          );
         }
       } else {
-        if (props.isCurrentFocusVertical) { // for a new tile stay with current direction
-          props.letterFocus(props.tileData.verticalWordIndex, props.rowIndex, props.index, true);
+        if (this.props.isCurrentFocusVertical) {
+          // for a new tile stay with current direction
+          this.props.letterFocus(
+            this.props.tileData.verticalWordIndex,
+            this.props.rowIndex,
+            this.props.index,
+            true
+          );
         } else {
-          props.letterFocus(props.tileData.horizontalWordIndex, props.rowIndex, props.index, false);
+          this.props.letterFocus(
+            this.props.tileData.horizontalWordIndex,
+            this.props.rowIndex,
+            this.props.index,
+            false
+          );
         }
       }
-    } 
-  }
-
-  const onKeyPress = (e) => {
-    if (e.nativeEvent.key === 'Backspace') {
-      props.setValue(props.rowIndex, props.index, '');
-      props.setNextFocus(props.rowIndex, props.index, -1);
-    } else {
-      props.setValue(props.rowIndex, props.index, e.nativeEvent.key);
-      // move to next letter
-      props.setNextFocus(props.rowIndex, props.index, 1);
     }
-    console.log('onKeyPress event.key: '+e.nativeEvent.key)
-    console.log('should be key: '+props.tileData.letter)
-    console.log('hint: '+props.words[props.focusedWordIndex]?.hint)
-  }
+  };
 
-  return props.tileData.letter ? (
-    <View>
-      <TextInput
-        style={[
-          styles.letterTile,
-          (props.focusedWordIndex == props.tileData.horizontalWordIndex ||
-            props.focusedWordIndex == props.tileData.verticalWordIndex) &&
-            styles.letterTileWordIsFocused,
-          (props.focusedLetterIndex === props.index && props.rowIndex === props.focusedRowIndex) &&
-          styles.letterTileLetterIsFocused,
-        ]}
-        autoCorrect={false}
-        autoCapitalize='characters'
-        value={props.value}
-        maxLength={1}
-        onTouchEnd={onTouchEnd}
-        caretHidden={true}
-        ref={props.index + ','+props.rowIndex}
-        inputAccessoryViewID={props.index + ','+props.rowIndex}
-        onKeyPress={onKeyPress}
-        ref={inputRef}
-      />
-      <InputAccessoryView nativeID={props.index + ','+props.rowIndex}>
-        <View style={styles.hintBar} >
-            <Text style={styles.hint} >{props.words[props.focusedWordIndex]?.hint}</Text>
-        </View>
-      </InputAccessoryView>
-    </View>
-  ) : (
-    <View style={styles.blankTile} />
-  );
-};
+  onKeyPress = e => {
+    if (!this.props.victory) {
+      if (e.nativeEvent.key === "Backspace") {
+        this.props.setValue(this.props.rowIndex, this.props.index, "");
+        this.props.setNextFocus(this.props.rowIndex, this.props.index, -1);
+        this.setState({ value: "" });
+      } else {
+        this.props.setValue(
+          this.props.rowIndex,
+          this.props.index,
+          e.nativeEvent.key
+        );
+        // move to next letter
+        this.props.setNextFocus(this.props.rowIndex, this.props.index, 1);
+        this.setState({ value: e.nativeEvent.key });
+      }
+    } else { // we don't want to change value if we've checked this letter, only want to move focus
+      if (e.nativeEvent.key === "Backspace") {
+        this.props.setNextFocus(this.props.rowIndex, this.props.index, -1);
+      } else {
+        // move to next letter
+        this.props.setNextFocus(this.props.rowIndex, this.props.index, 1);
+      }
+    }
+    console.log("onKeyPress event.key: " + e.nativeEvent.key);
+    console.log("should be key: " + this.props.tileData.letter);
+    console.log("hint: " + this.props.words[this.props.focusedWordIndex]?.hint);
+  };
+
+  render() {
+    return this.props.tileData.letter ? (
+      <View
+        style={styles.letterTileContainer}
+      >
+        <TextInput
+          style={[
+            styles.letterTile,
+            (this.props.focusedWordIndex ==
+              this.props.tileData.horizontalWordIndex ||
+              this.props.focusedWordIndex ==
+                this.props.tileData.verticalWordIndex) &&
+              styles.letterTile_wordIsFocused,
+            this.props.focusedLetterIndex === this.props.index &&
+              this.props.rowIndex === this.props.focusedRowIndex &&
+              styles.letterTile_letterIsFocused,
+            this.props.victory && styles.letterTile_victory
+          ]}
+          autoCorrect={false}
+          autoCapitalize="characters"
+          value={this.props.victory ? this.props.tileData.letter : this.state.value}
+          maxLength={1}
+          onTouchEnd={this.onTouchEnd}
+          caretHidden={true}
+          ref={this.props.index + "," + this.props.rowIndex}
+          inputAccessoryViewID={this.props.index + "," + this.props.rowIndex}
+          onKeyPress={this.onKeyPress}
+          ref={this.inputRef}
+        />
+        <InputAccessoryView
+          nativeID={this.props.index + "," + this.props.rowIndex}
+        >
+          <View style={styles.hintBar}>
+            <Button
+              style={styles.checkLetterButton}
+              title="✓" 
+              onPress={() => this.props.checkLetter(this.props.rowIndex, this.props.index)}
+            />
+            <Text style={styles.hint}>
+              {this.props.words[this.props.focusedWordIndex]?.hint}
+            </Text>
+            <Button
+              title='' 
+              style={styles.checkLetterButton}
+            />
+          </View>
+        </InputAccessoryView>
+      </View>
+    ) : (
+      <View style={styles.blankTile} />
+    );
+  }
+}
+
 export default LetterTile;
 
-const TILE_HEIGHT = 40;
-const TILE_WIDTH = 40;
-
 const styles = StyleSheet.create({
-  letterTile: {
-    height: TILE_HEIGHT,
-    width: TILE_WIDTH,
-    borderColor: "gray",
+  letterTileContainer: {
+    aspectRatio: 1, // makes undefined height equal to width
+    flex: 1,
+    flexDirection: 'row',
     borderWidth: 1,
+    borderColor: "black",
+  },
+  letterTile: {
+    flex: 1,
     fontSize: 26,
     textAlign: "center",
-    backgroundColor: 'white'
+    backgroundColor: "white"
   },
-  letterTileWordIsFocused: {
+  letterTile_wordIsFocused: {
     backgroundColor: "lightblue"
   },
-  letterTileLetterIsFocused: {
-    backgroundColor: 'yellow'
+  letterTile_letterIsFocused: {
+    backgroundColor: "yellow"
+  },
+  letterTile_victory: {
+    backgroundColor: "green"
   },
   blankTile: {
-    height: TILE_HEIGHT,
-    width: TILE_WIDTH,
-    backgroundColor: '#D0D0D0'
+    aspectRatio: 1, // makes undefined height equal to width
+    borderWidth: 1,
+    borderColor: "grey",
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: "#D0D0D0"
   },
   hintBar: {
     flex: 1,
-    height: 45,
-    width: '100%',
-    backgroundColor: 'lightblue',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
+    height: 60,
+    paddingHorizontal: 10,
+    width: "100%",
+    flexDirection: 'row',
+    backgroundColor: "lightblue",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center"
+  },
+  checkLetterButton: {
+    flex: 1,
   },
   hint: {
-    //position: 'absolute',
+    flex: 6,
     fontSize: 24,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center'
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center"
   }
 });

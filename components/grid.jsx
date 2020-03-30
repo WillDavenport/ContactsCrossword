@@ -9,17 +9,27 @@ const Grid = (props) => {
   const [isCurrentFocusVertical, setIsCurrentFocusVertical] = React.useState(false);
   const [nextFocusIndex, setNextFocusIndex] = React.useState([]);
   const [gridValues, setGridValues] = React.useState([]);
+  const [goalGridValues, setGoalGridValues] = React.useState([]);
+  const [victory, setVictory] = React.useState(false);
+  const [checkedLetters, setCheckedLetters] = React.useState({});
+  const [lettersChecked, setLettersChecked] = React.useState(0);
 
   React.useEffect(() => {
     if(props.grid) {
         let gridVals = new Array(props.grid.length);
+        let goalGridVals = new Array(props.grid.length);
         for(var r = 0; r < props.grid.length; r++){
             gridVals[r] = new Array(props.grid[0].length);
+            goalGridVals[r] = new Array(props.grid[0].length);
             for(var c = 0; c < props.grid[0].length; c++) {
                 gridVals[r][c] = '';
+                goalGridVals[r][c] = props.grid[r][c].letter || '' 
             }
         }
         setGridValues(gridVals);
+        setGoalGridValues(goalGridVals);
+        setVictory(false);
+        setCheckedLetters({});
     }
   }, [props.grid]);
   
@@ -32,7 +42,7 @@ const Grid = (props) => {
   }
 
   setNextFocus = (rowIndex, index, increment) => {
-    if (isCurrentFocusVertical) {
+   if (isCurrentFocusVertical) {
         if (props.grid[rowIndex+increment] && props.grid[rowIndex+increment][index].letter) {
             setNextFocusIndex([rowIndex+increment,index]);
             setFocusedRowIndex(rowIndex+increment);
@@ -47,12 +57,41 @@ const Grid = (props) => {
     }
   }
 
+  checkLetter= (rowIndex, letterIndex) => {
+    let key = rowIndex+','+letterIndex;
+    setCheckedLetters({...checkedLetters, [key]: true});
+    console.log('Check letter, checkLetters: ',checkedLetters)
+
+    setGridVal(rowIndex, letterIndex, goalGridValues[rowIndex][letterIndex]);
+    setLettersChecked(lettersChecked + 1);
+
+    // TODO: decrement score
+  }
+
   setGridVal = (row, col, value) => {
     console.log('setGridVal: row: ',row,' col: ',col,' value: ',value)
     let gridVals = gridValues;
-    console.log('gridVals: ',gridVals)
     gridVals[row] && (gridVals[row][col] = value);
+    
+    // check if victory is achieved
+    if (gridVals[0] && gridVals.length === goalGridValues.length && gridVals[0].length == goalGridValues[0].length) {
+        let foundDiffference = false;
+        for (var r = 0; r < props.grid.length; r++) {
+            for(var c = 0; c < props.grid[0].length; c++) {
+                if (gridVals[r][c] != goalGridValues[r][c]) {
+                    foundDiffference = true;
+                }
+            }
+        }
+        if (!foundDiffference) {
+            console.log('VICTORY!')
+            setVictory(true);
+            props.gameOver(lettersChecked);
+            setLettersChecked(0);
+        }
+    }
 
+    setGridValues(gridVals)
   }
   
   return (
@@ -75,6 +114,8 @@ const Grid = (props) => {
                     words={props.words}
                     value={gridValues[rowIndex]? gridValues[rowIndex][index] : ''}
                     setValue={setGridVal}
+                    victory={victory || checkedLetters[rowIndex+','+index]}
+                    checkLetter={(rowIndex, index) => checkLetter(rowIndex, index)}
                   />
               ))}
           </View>
@@ -87,11 +128,12 @@ export default Grid;
 const styles = StyleSheet.create({
   grid: {
     flex: 9,
+    width: '100%',
     backgroundColor: '#fff',
-    height: 'auto',
     alignItems: 'center',
   },
   row: {
       flexDirection: 'row',
+      width: '100%'
   }
 });

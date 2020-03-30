@@ -10,7 +10,8 @@ export default function App() {
   const [haveGrid, setHaveGrid] = React.useState(false); 
   const [contacts, setContacts] = React.useState([]);
   const [grid, setGrid] = React.useState([]);
-  const [gridWords, setGridWords] = React.useState([]); 
+  const [gridWords, setGridWords] = React.useState([]);
+  const [scores, setScores] = React.useState([]);
 
   const generateCrosswordPressed = () => {
     (async () => {
@@ -24,32 +25,43 @@ export default function App() {
           let formattedContacts = trimContactsData(data);
           setContacts(formattedContacts);
           
-          generateGame(10, 10);
+          generateGame(formattedContacts, 10, 10);
         }
       }
     })();
   }
 
-  const generateGame = ( gridRows, gridColumns) => {
-    let words = createGameWords(contacts, gridRows, gridColumns);
+  const generateGame = ( formattedContacts, gridRows, gridColumns) => {
+    let words = createGameWords(formattedContacts, gridRows, gridColumns);
 
-    setGrid(generateCrossword(words, gridRows, gridColumns));
-    setGridWords(words);
+    generatedCrossword = generateCrossword(words, gridRows, gridColumns);
+    setGrid(generatedCrossword[0]);
+    setGridWords(generatedCrossword[1]);
     setHaveGrid(true);
 
+  }
+
+  const addScore = (score) => {
+    let scoresList = scores;
+    scoresList.push(score);
+    scoresList.sort((a, b) => b - a); // sort scores descending
+    setScores(scoresList);
   }
   
   return (
     <View style={styles.container}>
-      <Button 
-        title="Generate Crossword" 
-        onPress={generateCrosswordPressed}
-      />
-      {haveGrid && (
+      {haveGrid ? (
         <CrosswordView 
           grid={grid}
           words={gridWords}
-          newGamePressed={() => generateGame(10,10)}
+          newGamePressed={() => generateGame(contacts, 10,10)}
+          scores={scores}
+          addScore={addScore}
+        />
+      ) : (
+        <Button 
+          title="Generate Crossword" 
+          onPress={generateCrosswordPressed}
         />
       )}
     </View>

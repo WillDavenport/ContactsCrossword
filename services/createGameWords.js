@@ -11,28 +11,24 @@ export function createGameWords(formattedContacts, gridRows, gridColumns) {
             const hintIndex = Math.floor(Math.random() * Math.floor(contact.possibleHints.length));
 
             if (word.length <= gridRows && word.length <= gridColumns) {
-                words.push({text: word.split(''), hint: contact.possibleHints[hintIndex]});
+                if (word.toUpperCase() != contact.possibleHints[hintIndex].toUpperCase()) {
+                    words.push({text: word.split(''), hint: contact.possibleHints[hintIndex]});
+                }
             }
         } else {
             let word = contact.possibleWords[0].toUpperCase();
             word.replace(/[^A-Z]/g, ''); // get rid of all non-letters
 
             const hintIndex = Math.floor(Math.random() * Math.floor(contact.possibleHints.length));
-            //console.log('hint Index: ',hintIndex);
+            // console.log('hint Index: ', hintIndex);
             if (word.length <= gridRows && word.length <= gridColumns) {
                 console.log('SET HINT: ',contact.possibleHints[hintIndex])
-                if (word != contact.possibleHints[hintIndex]) {
+                if (word.toUpperCase() != contact.possibleHints[hintIndex].toUpperCase()) {
                     words.push({text: word.split(''), hint: contact.possibleHints[hintIndex]});
                 }
             }
         }
     }
 
-    // shuffle the words
-    for (let i = words.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [words[i], words[j]] = [words[j], words[i]];
-    }
-    
     return words;
 } 
