@@ -127,7 +127,7 @@ export default Grid;
 
 const styles = StyleSheet.create({
   grid: {
-    flex: 9,
+    flex: 10,
     width: '100%',
     backgroundColor: '#fff',
     alignItems: 'center',

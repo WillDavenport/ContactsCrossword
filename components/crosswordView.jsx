@@ -7,6 +7,7 @@ import {
     TouchableHighlight, 
     Modal, 
     Alert,
+    ScrollView
 } from 'react-native';
 import Grid from './grid'
 
@@ -26,49 +27,58 @@ const CrosswordView = (props) => {
   
   return (
     <View style={styles.container}>
-        <View style={styles.topBar} >
-            
-            <Button 
-                style={styles.newGameButton}
-                title="New Game +" 
-                onPress={props.newGamePressed}
-            />
-        </View>
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-                }}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Congratulations!</Text>
-                        {isHighScore && (<Text style={styles.modalText}>New High Score!</Text>)}
-                        <Text style={styles.modalText}>You're score: {completedScore}</Text>
-                        <Text style={styles.modalText}>You're top scores</Text>
-                        {props.scores[0] && (<Text style={styles.modalText}>1.  {props.scores[0]}</Text>)}
-                        {props.scores[1] && (<Text style={styles.modalText}>2.  {props.scores[1]}</Text>)}
-                        {props.scores[2] && (<Text style={styles.modalText}>3.  {props.scores[2]}</Text>)}
-                        <TouchableHighlight
-                        style={ styles.modalNewGameButton }
-                        onPress={() => {
-                            setModalVisible(!modalVisible);
-                            props.newGamePressed();
-                        }}
-                        >
-                            <Text style={styles.textStyle}>New Game</Text>
-                        </TouchableHighlight>
-                    </View>
-                </View>
-            </Modal>
-      <Grid
-        grid={props.grid}
-        words={props.words}
-        setCurrentWordIndex={setCurrentWordIndex}
-        gameOver={gameOver}
-      />
+          <View style={styles.topBar} >
+              
+              <Button 
+                  style={styles.newGameButton}
+                  title="New Game" 
+                  onPress={props.newGamePressed}
+              />
+          </View>
+              <Modal
+                  animationType="fade"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                  Alert.alert("Modal has been closed.");
+                  }}
+              >
+                  <View style={styles.centeredView}>
+                      <View style={styles.modalView}>
+                          <Text style={styles.modalText}>Congratulations!</Text>
+                          {isHighScore && (<Text style={styles.modalText}>New High Score!</Text>)}
+                          <Text style={styles.modalText}>You're score: {completedScore}</Text>
+                          <Text style={styles.modalText}>You're top scores</Text>
+                          {props.scores[0] && (<Text style={styles.modalText}>1.  {props.scores[0]}</Text>)}
+                          {props.scores[1] && (<Text style={styles.modalText}>2.  {props.scores[1]}</Text>)}
+                          {props.scores[2] && (<Text style={styles.modalText}>3.  {props.scores[2]}</Text>)}
+                          <TouchableHighlight
+                          style={ styles.modalNewGameButton }
+                          onPress={() => {
+                              setModalVisible(!modalVisible);
+                              props.newGamePressed();
+                          }}
+                          >
+                              <Text style={styles.textStyle}>New Game</Text>
+                          </TouchableHighlight>
+                      </View>
+                  </View>
+              </Modal>
+        <Grid
+          grid={props.grid}
+          words={props.words}
+          setCurrentWordIndex={setCurrentWordIndex}
+          gameOver={gameOver}
+        />
+      
+      <Text style={styles.howToStyle}>
+        <Text style={{color: '#147efb'}}>How to play:{"\n"}</Text>
+        1. Each word in the crossword (Down or Accross) is either the first or last name of one of your contacts{"\n"}
+        2. The clue for the current word is shown above the keyboard{"\n"}
+        3. Double tap on a square to switch direction{"\n"}
+        4. If you need help{"\n"}
+        5. Tap on any box to get started{"\n"}
+      </Text>
     </View>
   );
 }
@@ -76,10 +86,13 @@ export default CrosswordView;
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
+    flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  scrollView: {
+    flex: 2
   },
   topBar: {
       flex: 1,
@@ -91,10 +104,17 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-end',
       textAlign: 'center',
       paddingHorizontal: 10,
-      paddingTop: 15
+      paddingTop: 15,
   },
   newGameButton: {
     
+  },
+  howToStyle: {
+    position: 'absolute',
+    bottom: 0,
+    padding: 20,
+    fontSize: 18,
+    lineHeight: 22,
   },
   centeredView: {
     flex: 1,
