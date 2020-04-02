@@ -105,14 +105,15 @@ class LetterTile extends Component {
         this.props.setNextFocus(this.props.rowIndex, this.props.index, -1);
         this.setState({ value: "" });
       } else {
-        this.props.setValue(
-          this.props.rowIndex,
-          this.props.index,
-          e.nativeEvent.key
-        );
-        // move to next letter
-        this.props.setNextFocus(this.props.rowIndex, this.props.index, 1);
-        this.setState({ value: e.nativeEvent.key });
+          this.props.setValue(
+            this.props.rowIndex,
+            this.props.index,
+            e.nativeEvent.key.toUpperCase()
+          );
+          // move to next letter
+          this.props.setNextFocus(this.props.rowIndex, this.props.index, 1);
+          this.setState({ value: e.nativeEvent.key.toUpperCase() });
+        
       }
     } else { // we don't want to change value if we've checked this letter, only want to move focus
       if (e.nativeEvent.key === "Backspace") {

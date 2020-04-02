@@ -8,7 +8,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.2",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/contactsCrosswordIcon.png",
     "splash": {
@@ -25,8 +25,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.willdavenport.contactscrossword",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "config": {
           "googleMobileAdsAppId": "ca-app-pub-6643827733570457~1971802195"
+      },
+      "infoPlist": {
+          "ITSAppUsesNonExemptEncryption": "NO"
       }
     },
     "description": ""

@@ -71,7 +71,9 @@ const Grid = (props) => {
   setGridVal = (row, col, value) => {
     console.log('setGridVal: row: ',row,' col: ',col,' value: ',value)
     let gridVals = gridValues;
+    
     gridVals[row] && (gridVals[row][col] = value);
+    
     
     // check if victory is achieved
     if (gridVals[0] && gridVals.length === goalGridValues.length && gridVals[0].length == goalGridValues[0].length) {

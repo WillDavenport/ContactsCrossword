@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Button, TextInput, Image } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { generateCrossword } from './services/generateCrossword';
 import CrosswordView from './components/crosswordView';
 import * as Contacts from 'expo-contacts';
@@ -8,6 +8,13 @@ import { createGameWords } from './services/createGameWords';
 import {
   AdMobInterstitial,
 } from 'expo-ads-admob';
+import * as Analytics from 'expo-firebase-analytics'; 
+
+Analytics.logEvent('share', {
+  contentType: 'text', 
+  itemId: 'Expo rocks!', 
+  method: 'facebook'
+});
 
 AdMobInterstitial.setAdUnitID('ca-app-pub-3940256099942544/4411468910'); // test ad, real ad unit id ca-app-pub-6643827733570457/5527903824
 

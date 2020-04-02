@@ -7,8 +7,10 @@ import {
     TouchableHighlight, 
     Modal, 
     Alert,
-    ScrollView
+    ScrollView,
+    TouchableOpacity
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import Grid from './grid'
 
 const CrosswordView = (props) => {
@@ -28,42 +30,49 @@ const CrosswordView = (props) => {
   return (
     <View style={styles.container}>
           <View style={styles.topBar} >
-              
-              <Button 
-                  style={styles.newGameButton}
-                  title="New Game" 
-                  onPress={props.newGamePressed}
-              />
+          <TouchableOpacity
+            style={ styles.buoyButton }
+            onPress={() => {
+                
+            }}
+          >
+            <Ionicons name="ios-help-buoy" size={40} color="#147efb"/>
+          </TouchableOpacity>
+            <Button 
+                style={styles.newGameButton}
+                title="New Game" 
+                onPress={props.newGamePressed}
+            />
           </View>
-              <Modal
-                  animationType="fade"
-                  transparent={true}
-                  visible={modalVisible}
-                  onRequestClose={() => {
-                  Alert.alert("Modal has been closed.");
-                  }}
-              >
-                  <View style={styles.centeredView}>
-                      <View style={styles.modalView}>
-                          <Text style={styles.modalText}>Congratulations!</Text>
-                          {isHighScore && (<Text style={styles.modalText}>New High Score!</Text>)}
-                          <Text style={styles.modalText}>You're score: {completedScore}</Text>
-                          <Text style={styles.modalText}>You're top scores</Text>
-                          {props.scores[0] && (<Text style={styles.modalText}>1.  {props.scores[0]}</Text>)}
-                          {props.scores[1] && (<Text style={styles.modalText}>2.  {props.scores[1]}</Text>)}
-                          {props.scores[2] && (<Text style={styles.modalText}>3.  {props.scores[2]}</Text>)}
-                          <TouchableHighlight
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Congratulations!</Text>
+                        {isHighScore && (<Text style={styles.modalText}>New High Score!</Text>)}
+                        <Text style={styles.modalText}>You're score: {completedScore}</Text>
+                        <Text style={styles.modalText}>You're top scores</Text>
+                        {props.scores[0] && (<Text style={styles.modalText}>1.  {props.scores[0]}</Text>)}
+                        {props.scores[1] && (<Text style={styles.modalText}>2.  {props.scores[1]}</Text>)}
+                        {props.scores[2] && (<Text style={styles.modalText}>3.  {props.scores[2]}</Text>)}
+                        <TouchableHighlight
                           style={ styles.modalNewGameButton }
                           onPress={() => {
                               setModalVisible(!modalVisible);
                               props.newGamePressed();
                           }}
-                          >
-                              <Text style={styles.textStyle}>New Game</Text>
-                          </TouchableHighlight>
-                      </View>
-                  </View>
-              </Modal>
+                        >
+                            <Text style={styles.textStyle}>New Game</Text>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+            </Modal>
         <Grid
           grid={props.grid}
           words={props.words}
@@ -105,6 +114,9 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       paddingHorizontal: 10,
       paddingTop: 15,
+  },
+  buoyButton: {
+    color: 'blue'
   },
   newGameButton: {
     
