@@ -11,9 +11,12 @@ import {
     TouchableOpacity
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Grid from './grid'
+import Grid from './grid';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const CrosswordView = (props) => {
+  const { showActionSheetWithOptions } = useActionSheet();
+
   const [isWordFocused, setIsWordFocused] = React.useState(false);
   const [currentWordIndex, setCurrentWordIndex] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -26,18 +29,33 @@ const CrosswordView = (props) => {
     props.addScore(1000-(30*lettersChecked))
     setModalVisible(!modalVisible);
   }
+
+  const openActionSheet = () => {
+    const options = ['Reveal Letter', 'Reveal Word', 'Reveal Puzzle', 'Cancel'];
+    const cancelButtonIndex = 3;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      buttonIndex => {
+        // Do something here depending on the button index selected
+      },
+    );
+  }
   
   return (
     <View style={styles.container}>
           <View style={styles.topBar} >
-          <TouchableOpacity
-            style={ styles.buoyButton }
-            onPress={() => {
-                
-            }}
-          >
-            <Ionicons name="ios-help-buoy" size={40} color="#147efb"/>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={ styles.buoyButton }
+              onPress={() => {
+                  openActionSheet();
+              }}
+            >
+              <Ionicons name="ios-help-buoy" size={40} color="#147efb"/>
+            </TouchableOpacity>
             <Button 
                 style={styles.newGameButton}
                 title="New Game" 
@@ -117,6 +135,19 @@ const styles = StyleSheet.create({
   },
   buoyButton: {
     color: 'blue'
+  },
+  helpDropdown: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    backgroundColor: 'white',
+    fontSize: 18,
+    width: 100,
+    zIndex: 100,
+    marginTop: 45
+  },
+  helpDropdownButton: {
+    fontSize: 18,
   },
   newGameButton: {
     

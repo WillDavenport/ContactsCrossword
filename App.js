@@ -9,6 +9,7 @@ import {
   AdMobInterstitial,
 } from 'expo-ads-admob';
 import * as Analytics from 'expo-firebase-analytics'; 
+import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 
 Analytics.logEvent('share', {
   contentType: 'text', 
@@ -120,13 +121,15 @@ class App extends Component {
     return ( 
       <View style={styles.container}>
         {this.state.haveGrid ? (
-          <CrosswordView 
-            grid={this.state.grid}
-            words={this.state.gridWords}
-            newGamePressed={this.newGame}
-            scores={this.state.scores}
-            addScore={this.addScore}
-          />
+          <ActionSheetProvider>
+            <CrosswordView 
+              grid={this.state.grid}
+              words={this.state.gridWords}
+              newGamePressed={this.newGame}
+              scores={this.state.scores}
+              addScore={this.addScore}
+            />
+          </ActionSheetProvider>
         ) : (
           <View>
             {this.state.contactsPermissionsDenied && (
