@@ -12,16 +12,15 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Grid from './grid';
-import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const CrosswordView = (props) => {
-  const { showActionSheetWithOptions } = useActionSheet();
-
-  const [isWordFocused, setIsWordFocused] = React.useState(false);
+  const didMountRef = React.useRef(false);
+  
   const [currentWordIndex, setCurrentWordIndex] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
   const [completedScore, setCompletedScore] = React.useState(0);
   const [isHighScore, setIsHighScore] = React.useState(false);
+  const [openActionSheet, setOpenActionSheet] = React.useState(false);
 
   const gameOver = (lettersChecked) => {
     setIsHighScore(!props.scores[0] || props.scores[0] < 1000-(30*lettersChecked));
@@ -30,20 +29,16 @@ const CrosswordView = (props) => {
     setModalVisible(!modalVisible);
   }
 
-  const openActionSheet = () => {
-    const options = ['Reveal Letter', 'Reveal Word', 'Reveal Puzzle', 'Cancel'];
-    const cancelButtonIndex = 3;
-
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-      },
-      buttonIndex => {
-        // Do something here depending on the button index selected
-      },
-    );
-  }
+  React.useEffect(() => {
+    if (didMountRef.current) {
+      if(modalVisible == false){
+        props.newGamePressed();
+      }
+    }
+    else {
+      didMountRef.current = true;
+    }
+  }, [modalVisible])
   
   return (
     <View style={styles.container}>
@@ -51,10 +46,10 @@ const CrosswordView = (props) => {
             <TouchableOpacity
               style={ styles.buoyButton }
               onPress={() => {
-                  openActionSheet();
+                  setOpenActionSheet(true);
               }}
             >
-              <Ionicons name="ios-help-buoy" size={40} color="#147efb"/>
+              <Ionicons name="ios-help-buoy" size={40} color="#147efb" style={{marginTop: 5}} />
             </TouchableOpacity>
             <Button 
                 style={styles.newGameButton}
@@ -82,8 +77,7 @@ const CrosswordView = (props) => {
                         <TouchableHighlight
                           style={ styles.modalNewGameButton }
                           onPress={() => {
-                              setModalVisible(!modalVisible);
-                              props.newGamePressed();
+                            setModalVisible(false);  
                           }}
                         >
                             <Text style={styles.textStyle}>New Game</Text>
@@ -96,6 +90,8 @@ const CrosswordView = (props) => {
           words={props.words}
           setCurrentWordIndex={setCurrentWordIndex}
           gameOver={gameOver}
+          openActionSheet={openActionSheet}
+          resetActionSheetCall={() => setOpenActionSheet(false)}
         />
       
       <Text style={styles.howToStyle}>
@@ -103,7 +99,7 @@ const CrosswordView = (props) => {
         1. Each word in the crossword (Down or Accross) is either the first or last name of one of your contacts{"\n"}
         2. The clue for the current word is shown above the keyboard{"\n"}
         3. Double tap on a square to switch direction{"\n"}
-        4. If you need help{"\n"}
+        4. If you need help, click on the <Ionicons name="ios-help-buoy" size={24} color="#147efb" /> icon above to reveal a letter, word, or the rest of the puzzle{"\n"}
         5. Tap on any box to get started{"\n"}
       </Text>
     </View>

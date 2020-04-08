@@ -10,7 +10,7 @@ export function generateCrossword(words = [], GRID_ROWS = 14, GRID_COLS = 10) {
 
   let bestGrid = [];
   let bestGridWords = [];
-  let bestScore = 0;
+  let bestScore = -1;
 
   for (let round = 0; round < 10; round++) {
     var gridRows = GRID_ROWS;
@@ -116,8 +116,10 @@ export function generateCrossword(words = [], GRID_ROWS = 14, GRID_COLS = 10) {
         crosswordScore+=ROW_OR_COLUMN_REMOVED_POINTS;
       }
     }
+    if(gridRows > gridColumns + 2) { // If the crossword is too tall the keyboard will cover it up on shorter devices
+      crosswordScore = 0
+    }
     if (crosswordScore > bestScore) {
-        
         bestScore = crosswordScore;
         bestGrid = grid;
         bestGridWords = words.map(a => ({...a})); // deep copy array

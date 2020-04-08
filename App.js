@@ -5,19 +5,16 @@ import CrosswordView from './components/crosswordView';
 import * as Contacts from 'expo-contacts';
 import { trimContactsData } from './services/trimContacts';
 import { createGameWords } from './services/createGameWords';
-import {
-  AdMobInterstitial,
-} from 'expo-ads-admob';
+
 import * as Analytics from 'expo-firebase-analytics'; 
 import { ActionSheetProvider } from '@expo/react-native-action-sheet'
+import InterstitialView from './components/interstitialView';
 
 Analytics.logEvent('share', {
   contentType: 'text', 
   itemId: 'Expo rocks!', 
   method: 'facebook'
 });
-
-AdMobInterstitial.setAdUnitID('ca-app-pub-3940256099942544/4411468910'); // test ad, real ad unit id ca-app-pub-6643827733570457/5527903824
 
 class App extends Component {
   state = { 
@@ -26,7 +23,8 @@ class App extends Component {
     grid: [],
     gridWords: [],
     scores: [],
-    contactsPermissionsDenied: false
+    contactsPermissionsDenied: false,
+    loadInterstitialFlag: false
   }
 
   componentDidMount() {
@@ -50,11 +48,6 @@ class App extends Component {
         }
       })();
     }
-    // load interstitial ad
-    (async () => {
-      //AdMobInterstitial.setTestDeviceID('EMULATOR');
-      await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
-    })();
   }
 
   getContacts = () => {
@@ -92,22 +85,7 @@ class App extends Component {
     this.generateGame(this.state.contacts, 10,10);
 
     // Display an interstitial
-    this.openInterstitial();
-  }
-
-  openInterstitial = async () => {
-    try {
-      await AdMobInterstitial.showAdAsync();
-    } catch (error) {
-      console.error(error)
-    } finally {
-      try {
-        // load next ad
-        await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
-      } catch (error) {
-        console.error(error)
-      }
-    }
+    this.setState({loadInterstitialFlag: !this.state.loadInterstitialFlag})
   }
   
   addScore = (score) => {
@@ -120,6 +98,9 @@ class App extends Component {
   render() { 
     return ( 
       <View style={styles.container}>
+        <InterstitialView 
+          loadInterstitialFlag={this.state.loadInterstitialFlag}
+        />
         {this.state.haveGrid ? (
           <ActionSheetProvider>
             <CrosswordView 
