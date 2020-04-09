@@ -5,7 +5,7 @@ import CrosswordView from './components/crosswordView';
 import * as Contacts from 'expo-contacts';
 import { trimContactsData } from './services/trimContacts';
 import { createGameWords } from './services/createGameWords';
-
+import { AsyncStorage } from 'react-native';
 import * as Analytics from 'expo-firebase-analytics'; 
 import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 import InterstitialView from './components/interstitialView';
@@ -89,10 +89,40 @@ class App extends Component {
   }
   
   addScore = (score) => {
-    let scoresList = this.state.scores;
+    (async () => {
+      try {
+        let scoresString = await AsyncStorage.getItem('scores');
+        var scores;
+        if (scoresString !== null) {
+          // We have data!!
+          console.log('we got data bitches')
+          console.log(scoresString);
+          scores = JSON.parse(scoresString);
+
+          scores.push(score);
+          scores.sort((a, b) => b - a); // sort scores descending
+        } else {
+          console.log('no data')
+          scores = [];
+          scores.push(score);
+        }
+        this.setState({scores});
+        try { // put new scores in storage
+          await AsyncStorage.setItem('scores', JSON.stringify(scores));
+        } catch (error) {
+          // Error saving data
+          console.log(error)
+        }
+      } catch (error) {
+        // Error retrieving data
+        console.log(error)
+      }
+    })();
+    
+    /*let scoresList = this.state.scores;
     scoresList.push(score);
     scoresList.sort((a, b) => b - a); // sort scores descending
-    this.setState({scores: scoresList});
+    this.setState({scores: scoresList});*/
   }
 
   render() { 
