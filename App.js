@@ -16,6 +16,9 @@ Analytics.logEvent('share', {
   method: 'facebook'
 });
 
+Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps.allowFontScaling = false;
+
 class App extends Component {
   state = { 
     haveGrid: false,
@@ -24,7 +27,8 @@ class App extends Component {
     gridWords: [],
     scores: [],
     contactsPermissionsDenied: false,
-    loadInterstitialFlag: false
+    loadInterstitialFlag: false,
+    isHighScore: false
   }
 
   componentDidMount() {
@@ -95,18 +99,18 @@ class App extends Component {
         var scores;
         if (scoresString !== null) {
           // We have data!!
-          console.log('we got data bitches')
-          console.log(scoresString);
           scores = JSON.parse(scoresString);
 
           scores.push(score);
           scores.sort((a, b) => b - a); // sort scores descending
         } else {
-          console.log('no data')
           scores = [];
           scores.push(score);
         }
-        this.setState({scores});
+        this.setState({
+          scores,
+          isHighScore: score == scores[0]
+        });
         try { // put new scores in storage
           await AsyncStorage.setItem('scores', JSON.stringify(scores));
         } catch (error) {
@@ -139,6 +143,7 @@ class App extends Component {
               newGamePressed={this.newGame}
               scores={this.state.scores}
               addScore={this.addScore}
+              isHighScore={this.state.isHighScore}
             />
           </ActionSheetProvider>
         ) : (

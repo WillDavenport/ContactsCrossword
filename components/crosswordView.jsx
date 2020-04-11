@@ -13,32 +13,39 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import Grid from './grid';
 
+Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps.allowFontScaling = false;
+
 const CrosswordView = (props) => {
   const didMountRef = React.useRef(false);
   
   const [currentWordIndex, setCurrentWordIndex] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
   const [completedScore, setCompletedScore] = React.useState(0);
-  const [isHighScore, setIsHighScore] = React.useState(false);
   const [openActionSheet, setOpenActionSheet] = React.useState(false);
 
   const gameOver = (lettersChecked) => {
-    setIsHighScore(!props.scores[0] || props.scores[0] < 1000-(30*lettersChecked));
     setCompletedScore(1000-(30*lettersChecked));
     props.addScore(1000-(30*lettersChecked))
     setModalVisible(!modalVisible);
   }
 
-  React.useEffect(() => {
+ /* React.useEffect(() => {
     if (didMountRef.current) {
       if(modalVisible == false){
         props.newGamePressed();
+        console.log('newGamePressed')
       }
     }
     else {
       didMountRef.current = true;
     }
-  }, [modalVisible])
+  }, [modalVisible])*/
+
+  const modalHidden = () => {
+    props.newGamePressed();
+    console.log('onModalHide')
+  }
   
   return (
     <View style={styles.container}>
@@ -64,11 +71,12 @@ const CrosswordView = (props) => {
                 onRequestClose={() => {
                 Alert.alert("Modal has been closed.");
                 }}
+                onDismiss={modalHidden}
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Congratulations!</Text>
-                        {isHighScore && (<Text style={styles.modalText}>New High Score!</Text>)}
+                        {props.isHighScore && (<Text style={styles.modalText}>New High Score!</Text>)}
                         <Text style={styles.modalText}>You're score: {completedScore}</Text>
                         <Text style={styles.modalText}>You're top scores</Text>
                         {props.scores[0] && (<Text style={styles.modalText}>1.  {props.scores[0]}</Text>)}
@@ -130,7 +138,9 @@ const styles = StyleSheet.create({
       paddingTop: 15,
   },
   buoyButton: {
-    color: 'blue'
+    color: 'blue',
+    flex: 1,
+    paddingHorizontal: 5 
   },
   helpDropdown: {
     alignItems: 'center',
@@ -146,7 +156,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   newGameButton: {
-    
+    flex: 1,
+    paddingHorizontal: 5
   },
   howToStyle: {
     position: 'absolute',

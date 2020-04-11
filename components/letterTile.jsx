@@ -8,6 +8,9 @@ import {
   Button
 } from "react-native";
 
+Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps.allowFontScaling = false;
+
 class LetterTile extends Component {
   constructor(props) {
     super(props);
