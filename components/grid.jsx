@@ -135,7 +135,12 @@ class Grid extends Component {
     this.props.gameOver(numLettersChecked);
     this.setState({
       victory: true,
-      lettersChecked: 0
+      lettersChecked: 0,
+      focusedWordIndex: -1,
+      focusedRowIndex: -1,
+      focusedLetterIndex: -1,
+      isCurrentFocusVertical: false,
+      nextFocusIndex: [],
     });
   }
   
@@ -177,7 +182,12 @@ class Grid extends Component {
               this.props.gameOver(this.state.lettersChecked);
               this.setState({
                 victory: true,
-                lettersChecked: 0
+                lettersChecked: 0,
+                focusedWordIndex: -1,
+                focusedRowIndex: -1,
+                focusedLetterIndex: -1,
+                isCurrentFocusVertical: false,
+                nextFocusIndex: [],
               })
           }
       }
@@ -211,7 +221,12 @@ class Grid extends Component {
                 this.props.gameOver(this.state.lettersChecked);
                 this.setState({
                   victory: true,
-                  lettersChecked: 0
+                  lettersChecked: 0,
+                  focusedWordIndex: -1,
+                  focusedRowIndex: -1,
+                  focusedLetterIndex: -1,
+                  isCurrentFocusVertical: false,
+                  nextFocusIndex: [],
                 })
             }
         }
@@ -239,7 +254,12 @@ class Grid extends Component {
             this.props.gameOver(this.state.lettersChecked);
             this.setState({
               victory: true,
-              lettersChecked: 0
+              lettersChecked: 0,
+              focusedWordIndex: -1,
+              focusedRowIndex: -1,
+              focusedLetterIndex: -1,
+              isCurrentFocusVertical: false,
+              nextFocusIndex: [],
             })
         }
     }
