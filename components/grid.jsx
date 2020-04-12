@@ -118,35 +118,104 @@ class Grid extends Component {
   }
 
   checkPuzzle = () => {
-    for (var r = 0; r < this.props.grid.length; r++) {
-      for(var c = 0; c < this.props.grid[0].length; c++) {
-        this.checkLetter(r,c);
+    let numLettersChecked = this.state.lettersChecked;
+    for (var rowIndex = 0; rowIndex < this.props.grid.length; rowIndex++) {
+      for(var letterIndex = 0; letterIndex < this.props.grid[0].length; letterIndex++) {
+        // check letter block
+        let key = rowIndex+','+letterIndex;
+        if (this.state.goalGridValues[rowIndex] && this.state.goalGridValues[rowIndex][letterIndex] && !(this.state.checkedLetters[key])) {
+          if (this.state.goalGridValues[rowIndex][letterIndex] === this.state.gridValues[rowIndex][letterIndex]) { // already correct
+            
+          } else{ // wrong
+            numLettersChecked++;
+          }
+        }
       }
     }
+    this.props.gameOver(numLettersChecked);
+    this.setState({
+      victory: true,
+      lettersChecked: 0
+    });
   }
   
   checkWord = () => {
     if(this.state.focusedWordIndex !== -1) {
-      for (var r = 0; r < this.props.grid.length; r++) {
-        for(var c = 0; c < this.props.grid[0].length; c++) {
-          if (this.props.grid[r][c].horizontalWordIndex == this.state.focusedWordIndex || this.props.grid[r][c].verticalWordIndex == this.state.focusedWordIndex) {
-            this.checkLetter(r,c);
+      for (var rowIndex = 0; rowIndex < this.props.grid.length; rowIndex++) {
+        for(var letterIndex = 0; letterIndex < this.props.grid[0].length; letterIndex++) {
+          let key = rowIndex+','+letterIndex;
+          if ((this.props.grid[rowIndex][letterIndex].horizontalWordIndex == this.state.focusedWordIndex || 
+              this.props.grid[rowIndex][letterIndex].verticalWordIndex == this.state.focusedWordIndex) && 
+              !(this.state.checkedLetters[key])
+              ) {
+            // check letter
+            if (this.state.goalGridValues[rowIndex][letterIndex] === this.state.gridValues[rowIndex][letterIndex]) { // already correct
+              this.setState({
+                checkedLetters: {...this.state.checkedLetters, [key]: true},
+              })
+      
+            } else { // wrong
+              this.setState({
+                checkedLetters: {...this.state.checkedLetters, [key]: true},
+                lettersChecked: this.state.lettersChecked + 1
+              })
+            }
           }
         }
+      }
+      // check if puzzle completed
+      if (this.state.gridValues[0] && this.state.gridValues.length === this.state.goalGridValues.length && this.state.gridValues[0].length == this.state.goalGridValues[0].length) {
+          let foundDiffference = false;
+          for (var r = 0; r < this.props.grid.length; r++) {
+              for(var c = 0; c < this.props.grid[0].length; c++) {
+                  if (this.state.gridValues[r][c] != this.state.goalGridValues[r][c] && !(this.state.checkedLetters[r+','+c])) { 
+                    foundDiffference = true;
+                  }
+              }
+          }
+          if (!foundDiffference) {
+              this.props.gameOver(this.state.lettersChecked);
+              this.setState({
+                victory: true,
+                lettersChecked: 0
+              })
+          }
       }
     }
   }
 
   checkLetter= (rowIndex, letterIndex) => {
-    if (this.state.goalGridValues[rowIndex] && this.state.goalGridValues[rowIndex][letterIndex]) {
-      let key = rowIndex+','+letterIndex;
+    let key = rowIndex+','+letterIndex;
+    if (this.state.goalGridValues[rowIndex] && this.state.goalGridValues[rowIndex][letterIndex] && !(this.state.checkedLetters[key])) {
+      if (this.state.goalGridValues[rowIndex][letterIndex] === this.state.gridValues[rowIndex][letterIndex]) { // already correct
+        this.setState({
+          checkedLetters: {...this.state.checkedLetters, [key]: true},
+        })
 
-      this.setGridVal(rowIndex, letterIndex, this.state.goalGridValues[rowIndex][letterIndex]);
-
-      this.setState({
-        checkedLetters: {...this.state.checkedLetters, [key]: true},
-        lettersChecked: this.state.lettersChecked + 1
-      })
+      } else { // wrong
+        this.setState({
+          checkedLetters: {...this.state.checkedLetters, [key]: true},
+          lettersChecked: this.state.lettersChecked + 1
+        })
+        // check if puzzle completed
+        if (this.state.gridValues[0] && this.state.gridValues.length === this.state.goalGridValues.length && this.state.gridValues[0].length == this.state.goalGridValues[0].length) {
+            let foundDiffference = false;
+            for (var r = 0; r < this.props.grid.length; r++) {
+                for(var c = 0; c < this.props.grid[0].length; c++) {
+                    if (this.state.gridValues[r][c] != this.state.goalGridValues[r][c] && !(r+','+c ===  key || this.state.checkedLetters[r+','+c])) {
+                      foundDiffference = true;
+                    }
+                }
+            }
+            if (!foundDiffference) {
+                this.props.gameOver(this.state.lettersChecked);
+                this.setState({
+                  victory: true,
+                  lettersChecked: 0
+                })
+            }
+        }
+      }
     }
   }
 
@@ -161,7 +230,7 @@ class Grid extends Component {
         let foundDiffference = false;
         for (var r = 0; r < this.props.grid.length; r++) {
             for(var c = 0; c < this.props.grid[0].length; c++) {
-                if (gridVals[r][c] != this.state.goalGridValues[r][c]) {
+                if (gridVals[r][c] != this.state.goalGridValues[r][c] && !(this.state.checkedLetters[r+','+c])) {
                     foundDiffference = true;
                 }
             }

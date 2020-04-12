@@ -147,7 +147,8 @@ class LetterTile extends Component {
             this.props.focusedLetterIndex === this.props.index &&
               this.props.rowIndex === this.props.focusedRowIndex &&
               styles.letterTile_letterIsFocused,
-            this.props.victory && styles.letterTile_victory
+            (this.props.victory && this.props.tileData.letter === this.state.value) && styles.letterTile_checkedCorrect,
+            (this.props.victory && this.props.tileData.letter !== this.state.value) && styles.letterTile_checkedWrong
           ]}
           autoCorrect={false}
           autoCapitalize="characters"
@@ -207,8 +208,13 @@ const styles = StyleSheet.create({
   letterTile_letterIsFocused: {
     backgroundColor: "yellow"
   },
-  letterTile_victory: {
-    backgroundColor: "green"
+  letterTile_checkedCorrect: {
+    backgroundColor: "#1ec31e",
+    fontWeight: 'bold'
+  },
+  letterTile_checkedWrong: {
+    backgroundColor: "red",
+    fontWeight: 'bold'
   },
   blankTile: {
     aspectRatio: 1, // makes undefined height equal to width

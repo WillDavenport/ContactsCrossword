@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { AdMobInterstitial } from "expo-ads-admob";
 
 AdMobInterstitial.setAdUnitID("ca-app-pub-6643827733570457/5527903824"); // test ad, real ad unit id ca-app-pub-6643827733570457/5527903824
@@ -39,7 +39,11 @@ class InterstitialView extends Component {
   }
 
   render() {
-    return <View></View>;
+    return (
+      <View>
+        <StatusBar hidden={false} />
+     </View>
+    );
   }
 }
 
