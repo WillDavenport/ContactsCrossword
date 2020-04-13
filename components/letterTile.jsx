@@ -5,8 +5,10 @@ import {
   TextInput,
   InputAccessoryView,
   Text,
-  Button
+  Button,
+  TouchableOpacity
 } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -167,18 +169,21 @@ class LetterTile extends Component {
           nativeID={this.props.index + "," + this.props.rowIndex}
         >
           <View style={styles.hintBar}>
-            <Button
-              style={styles.checkLetterButton}
-              title="✓" 
+            <TouchableOpacity
+              style={ styles.checkLetterButton }
               onPress={() => this.props.checkLetter(this.props.rowIndex, this.props.index)}
-            />
-            <Text style={styles.hint}>
+            >
+              <Ionicons name="md-checkmark-circle-outline" size={38} color="#007AFF" style={{marginTop: 5}} />
+            </TouchableOpacity>
+            <Text style={styles.hint} onPress={this.props.openActionSheet}>
               {this.props.words[this.props.focusedWordIndex]?.hint}
             </Text>
-            <Button
-              title='' 
-              style={styles.checkLetterButton}
-            />
+            <TouchableOpacity
+              style={ styles.checkLetterButton }
+              onPress={this.props.openActionSheet}
+            >
+              <Ionicons name="ios-help-buoy" size={40} color="#007AFF" style={{marginTop: 5}} />
+            </TouchableOpacity>
           </View>
         </InputAccessoryView>
       </View>

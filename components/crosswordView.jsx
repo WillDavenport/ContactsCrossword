@@ -56,7 +56,7 @@ const CrosswordView = (props) => {
                   setOpenActionSheet(true);
               }}
             >
-              <Ionicons name="ios-help-buoy" size={40} color="#147efb" style={{marginTop: 5}} />
+              <Ionicons name="ios-help-buoy" size={40} color="#007AFF" style={{marginTop: 5}} />
             </TouchableOpacity>
             <Button 
                 style={styles.newGameButton}
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
       paddingTop: 15,
   },
   buoyButton: {
-    color: 'blue',
+    color: 'red',
     flex: 1,
     paddingHorizontal: 5 
   },

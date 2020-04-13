@@ -307,6 +307,7 @@ class Grid extends Component {
                       setValue={this.setGridVal}
                       victory={this.state.victory || this.state.checkedLetters[rowIndex+','+index]}
                       checkLetter={(rowIndex, index) => this.checkLetter(rowIndex, index)}
+                      openActionSheet={this.openActionSheet}
                     />
                 ))}
             </View>
