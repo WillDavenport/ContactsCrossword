@@ -100,19 +100,37 @@ class Grid extends Component {
   setNextFocus = (rowIndex, index, increment) => {
    if (this.state.isCurrentFocusVertical) {
         if (this.props.grid[rowIndex+increment] && this.props.grid[rowIndex+increment][index].letter) {
+          if (increment === -1) {  
             this.setState({
               nextFocusIndex: [rowIndex+increment,index],
               focusedRowIndex: rowIndex+increment,
               focusedLetterIndex: index,
             });
+            this.setGridVal(rowIndex+increment,index, '');
+          } else {
+            this.setState({
+              nextFocusIndex: [rowIndex+increment,index],
+              focusedRowIndex: rowIndex+increment,
+              focusedLetterIndex: index,
+            });
+          }
         }
     } else {
         if (this.props.grid[rowIndex][index+increment]?.letter) {
+          if (increment === -1) {
             this.setState({
               nextFocusIndex: [rowIndex,index+increment],
               focusedRowIndex: rowIndex,
               focusedLetterIndex: index+increment,
             });
+            this.setGridVal(rowIndex,index+increment, '');
+          } else {
+            this.setState({
+              nextFocusIndex: [rowIndex,index+increment],
+              focusedRowIndex: rowIndex,
+              focusedLetterIndex: index+increment,
+            });
+          }
         }
     }
   }

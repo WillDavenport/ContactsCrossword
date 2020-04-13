@@ -103,29 +103,31 @@ class LetterTile extends Component {
 
   onKeyPress = e => {
     if (!this.props.victory) {
-      if (e.nativeEvent.key === "Backspace") {
-        this.props.setValue(this.props.rowIndex, this.props.index, "");
+    if (e.nativeEvent.key === "Backspace") {
+      if (this.state.value === '') { // already nothing here so delete key behind
         this.props.setNextFocus(this.props.rowIndex, this.props.index, -1);
-        this.setState({ value: "" });
-      } else {
-          this.props.setValue(
-            this.props.rowIndex,
-            this.props.index,
-            e.nativeEvent.key.toUpperCase()
-          );
-          // move to next letter
-          this.props.setNextFocus(this.props.rowIndex, this.props.index, 1);
-          this.setState({ value: e.nativeEvent.key.toUpperCase() });
-        
       }
-    } else { // we don't want to change value if we've checked this letter, only want to move focus
-      if (e.nativeEvent.key === "Backspace") {
-        this.props.setNextFocus(this.props.rowIndex, this.props.index, -1);
-      } else {
+      this.props.setValue(this.props.rowIndex, this.props.index, "");
+      this.setState({ value: "" });
+    } else {
+        this.props.setValue(
+          this.props.rowIndex,
+          this.props.index,
+          e.nativeEvent.key.toUpperCase()
+        );
         // move to next letter
         this.props.setNextFocus(this.props.rowIndex, this.props.index, 1);
-      }
+        this.setState({ value: e.nativeEvent.key.toUpperCase() });
+      
+    } 
+  } else { // we don't want to change value if we've checked this letter, only want to move focus
+    if (e.nativeEvent.key === "Backspace") {
+      this.props.setNextFocus(this.props.rowIndex, this.props.index, -1);
+    } else {
+      // move to next letter
+      this.props.setNextFocus(this.props.rowIndex, this.props.index, 1);
     }
+  }
     console.log("onKeyPress event.key: " + e.nativeEvent.key);
     console.log("should be key: " + this.props.tileData.letter);
     console.log("hint: " + this.props.words[this.props.focusedWordIndex]?.hint);

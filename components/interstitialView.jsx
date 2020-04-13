@@ -41,7 +41,7 @@ class InterstitialView extends Component {
   render() {
     return (
       <View>
-        <StatusBar hidden={false} />
+        <StatusBar hidden={true} />
      </View>
     );
   }
