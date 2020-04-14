@@ -2,7 +2,7 @@ const ROW_OR_COLUMN_REMOVED_POINTS = 3;
 const INTERSECTION_POINTS = 6;
 const NEW_WORD_POINTS = 2;
 
-export function generateCrossword(words = [], GRID_ROWS = 14, GRID_COLS = 10) {
+export function generateCrossword(words = [], GRID_ROWS = 12, GRID_COLS = 12) {
   // eliminate words that are too long for grid
   words = words.filter(function(word) {
     return word.text.length <= GRID_ROWS && word.text.length <= GRID_COLS;
@@ -116,7 +116,7 @@ export function generateCrossword(words = [], GRID_ROWS = 14, GRID_COLS = 10) {
         crosswordScore+=ROW_OR_COLUMN_REMOVED_POINTS;
       }
     }
-    if(gridRows > gridColumns + 2) { // If the crossword is too tall the keyboard will cover it up on shorter devices
+    if(gridRows > gridColumns) { // If the crossword is too tall the keyboard will cover it up on shorter devices
       crosswordScore = 0
     }
     if (crosswordScore > bestScore) {

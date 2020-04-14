@@ -8,7 +8,8 @@ import {
     Modal, 
     Alert,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
+    TouchableWithoutFeedback
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Grid from './grid';
@@ -23,6 +24,7 @@ const CrosswordView = (props) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [completedScore, setCompletedScore] = React.useState(0);
   const [openActionSheet, setOpenActionSheet] = React.useState(false);
+  const [onlyDismissedModal, setOnlyDismissedModal] = React.useState(false);
 
   const gameOver = (lettersChecked) => {
     setCompletedScore(1000-(30*lettersChecked));
@@ -43,8 +45,12 @@ const CrosswordView = (props) => {
   }, [modalVisible])*/
 
   const modalHidden = () => {
-    props.newGamePressed();
-    console.log('onModalHide')
+    if (onlyDismissedModal) {
+      setOnlyDismissedModal(false);
+    } else {
+      props.newGamePressed();
+      console.log('onModalHide');
+    }
   }
   
   return (
@@ -73,6 +79,12 @@ const CrosswordView = (props) => {
                 }}
                 onDismiss={modalHidden}
             >
+                <TouchableWithoutFeedback onPress={() => {
+                  setOnlyDismissedModal(true);
+                  setModalVisible(false);
+                  }}>
+                  <View style={styles.modalOverlay} />
+                </TouchableWithoutFeedback>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Congratulations!</Text>
@@ -125,6 +137,15 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 2
   },
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 1000,
+    backgroundColor: 'rgba(0,0,0,0)'
+  },
   topBar: {
       flex: 1,
       flexDirection: 'row',
@@ -162,7 +183,8 @@ const styles = StyleSheet.create({
   howToStyle: {
     position: 'absolute',
     bottom: 0,
-    padding: 20,
+    padding: 18,
+    paddingBottom: 10,
     fontSize: 18,
     lineHeight: 22,
   },

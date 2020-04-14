@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Contacts Crossword",
-    "slug": "ContactsCrossword",
+    "slug": "Crossword",
     "privacy": "public",
     "platforms": [
       "ios",
