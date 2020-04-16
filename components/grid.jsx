@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, Dimensions } from 'react-native';
 import LetterTile from './letterTile';
 import { connectActionSheet } from '@expo/react-native-action-sheet';
+
+const window = Dimensions.get("window");
 
 class Grid extends Component {
   state = { 
@@ -249,6 +251,8 @@ class Grid extends Component {
             }
         }
       }
+      // move to next letter focus
+      this.setNextFocus(rowIndex, letterIndex, 1);
     }
   }
 
@@ -286,7 +290,7 @@ class Grid extends Component {
   
   render() { 
     return (
-      <View style={styles.grid}>
+      <View style={(window.height > 811 && window.width < 415) ? styles.tallGrid : (window.height < 810) ? styles.shortGrid :styles.grid}>
         {this.props.grid.map((row, rowIndex)=> (
             <View style={styles.row} key={rowIndex} >
                 {row.map((tile, index)=>(
@@ -323,7 +327,19 @@ export default ConnectedGrid;
 
 const styles = StyleSheet.create({
   grid: {
-    flex: 10,
+    flex: 16,
+    width: '100%',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  tallGrid: {
+    flex: 12,
+    width: '100%',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  shortGrid: {
+    flex: 14,
     width: '100%',
     backgroundColor: '#fff',
     alignItems: 'center',

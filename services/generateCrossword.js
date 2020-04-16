@@ -116,6 +116,11 @@ export function generateCrossword(words = [], GRID_ROWS = 12, GRID_COLS = 12) {
         crosswordScore+=ROW_OR_COLUMN_REMOVED_POINTS;
       }
     }
+    if (GRID_COLS > GRID_ROWS + 3) {
+      if(gridRows > gridColumns - 2 ) {
+        crosswordScore = 0
+      }
+    }
     if(gridRows > gridColumns) { // If the crossword is too tall the keyboard will cover it up on shorter devices
       crosswordScore = 0
     }

@@ -9,13 +9,15 @@ import {
     Alert,
     ScrollView,
     TouchableOpacity,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Dimensions
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Grid from './grid';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
+const window = Dimensions.get("window");
 
 const CrosswordView = (props) => {
   const didMountRef = React.useRef(false);
@@ -32,37 +34,24 @@ const CrosswordView = (props) => {
     setModalVisible(!modalVisible);
   }
 
- /* React.useEffect(() => {
-    if (didMountRef.current) {
-      if(modalVisible == false){
-        props.newGamePressed();
-        console.log('newGamePressed')
-      }
-    }
-    else {
-      didMountRef.current = true;
-    }
-  }, [modalVisible])*/
-
   const modalHidden = () => {
     if (onlyDismissedModal) {
       setOnlyDismissedModal(false);
     } else {
       props.newGamePressed();
-      console.log('onModalHide');
     }
   }
   
   return (
     <View style={styles.container}>
-          <View style={styles.topBar} >
+          <View style={(window.height > 811 && window.width < 415) ? styles.tallTopBar : styles.topBar} >
             <TouchableOpacity
               style={ styles.buoyButton }
-              onPress={() => {
-                  setOpenActionSheet(true);
+              onPress={() => { 
+                setOpenActionSheet(true);
               }}
             >
-              <Ionicons name="ios-help-buoy" size={40} color="#007AFF" style={{marginTop: 5}} />
+              <Ionicons name="ios-help-buoy" size={40} color="#007AFF" style={window.height > 740 && {marginTop: 3}} />
             </TouchableOpacity>
             <Button 
                 style={styles.newGameButton}
@@ -82,28 +71,27 @@ const CrosswordView = (props) => {
                 <TouchableWithoutFeedback onPress={() => {
                   setOnlyDismissedModal(true);
                   setModalVisible(false);
-                  }}>
-                  <View style={styles.modalOverlay} />
+                }}>
+                  <View style={styles.centeredView}>
+                      <View style={styles.modalView}>
+                          <Text style={styles.modalText}>Congratulations!</Text>
+                          {props.isHighScore && (<Text style={styles.modalText}>New High Score!</Text>)}
+                          <Text style={styles.modalText}>You're score: {completedScore}</Text>
+                          <Text style={styles.modalText}>You're top scores</Text>
+                          {props.scores[0] && (<Text style={(props.scores[0] === completedScore) ? styles.thisScoreText : styles.modalText}>1.  {props.scores[0]}</Text>)}
+                          {props.scores[1] && (<Text style={(props.scores[1] === completedScore) ? styles.thisScoreText : styles.modalText}>2.  {props.scores[1]}</Text>)}
+                          {props.scores[2] && (<Text style={(props.scores[2] === completedScore) ? styles.thisScoreText : styles.modalText}>3.  {props.scores[2]}</Text>)}
+                          <TouchableHighlight
+                            style={ styles.modalNewGameButton }
+                            onPress={() => {
+                              setModalVisible(false);  
+                            }}
+                          >
+                              <Text style={styles.textStyle}>New Game</Text>
+                          </TouchableHighlight>
+                      </View>
+                  </View>
                 </TouchableWithoutFeedback>
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Congratulations!</Text>
-                        {props.isHighScore && (<Text style={styles.modalText}>New High Score!</Text>)}
-                        <Text style={styles.modalText}>You're score: {completedScore}</Text>
-                        <Text style={styles.modalText}>You're top scores</Text>
-                        {props.scores[0] && (<Text style={styles.modalText}>1.  {props.scores[0]}</Text>)}
-                        {props.scores[1] && (<Text style={styles.modalText}>2.  {props.scores[1]}</Text>)}
-                        {props.scores[2] && (<Text style={styles.modalText}>3.  {props.scores[2]}</Text>)}
-                        <TouchableHighlight
-                          style={ styles.modalNewGameButton }
-                          onPress={() => {
-                            setModalVisible(false);  
-                          }}
-                        >
-                            <Text style={styles.textStyle}>New Game</Text>
-                        </TouchableHighlight>
-                    </View>
-                </View>
             </Modal>
         <Grid
           grid={props.grid}
@@ -114,7 +102,7 @@ const CrosswordView = (props) => {
           resetActionSheetCall={() => setOpenActionSheet(false)}
         />
       
-      <Text style={styles.howToStyle}>
+      <Text style={(window.height < 810) ? styles.shortHowToStyle :styles.howToStyle}>
         <Text style={{color: '#147efb'}}>How to play:{"\n"}</Text>
         1. Each word in the crossword (Down or Accross) is either the first or last name of one of your contacts{"\n"}
         2. The clue for the current word is shown above the keyboard{"\n"}
@@ -137,26 +125,29 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 2
   },
-  modalOverlay: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 1000,
-    backgroundColor: 'rgba(0,0,0,0)'
-  },
   topBar: {
       flex: 1,
       flexDirection: 'row',
       backgroundColor: '#ededed',
-      height: 10,
+      height: 20,
       width: '100%',
       alignItems: 'center',
       justifyContent: 'flex-end',
       textAlign: 'center',
       paddingHorizontal: 10,
-      paddingTop: 15,
+      paddingTop: 0,
+  },
+  tallTopBar: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#ededed',
+    height: 10,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    textAlign: 'center',
+    paddingHorizontal: 10,
+    paddingTop: 15,
   },
   buoyButton: {
     color: 'red',
@@ -187,6 +178,14 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 18,
     lineHeight: 22,
+  },
+  shortHowToStyle: {
+    position: 'absolute',
+    bottom: 0,
+    padding: 8,
+    paddingBottom: 0,
+    fontSize: 18,
+    lineHeight: 18,
   },
   centeredView: {
     flex: 1,
@@ -224,5 +223,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
     fontSize: 20
+  },
+  thisScoreText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 20,
+    color: 'green',
+    fontWeight:'bold'
   }
 });

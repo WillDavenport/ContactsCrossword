@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
 import { generateCrossword } from './services/generateCrossword';
 import CrosswordView from './components/crosswordView';
 import * as Contacts from 'expo-contacts';
@@ -18,6 +18,8 @@ Analytics.logEvent('share', {
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
+
+const window = Dimensions.get("window");
 
 class App extends Component {
   state = { 
@@ -86,7 +88,11 @@ class App extends Component {
   }
 
   newGame = () => {
-    this.generateGame(this.state.contacts, 10,10);
+    if (window.width > 750) { // iPad width
+      this.generateGame(this.state.contacts, 12,16);
+    } else {
+      this.generateGame(this.state.contacts, 10,10);
+    }
 
     // Display an interstitial
     this.setState({loadInterstitialFlag: !this.state.loadInterstitialFlag})
