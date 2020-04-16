@@ -45,14 +45,8 @@ const CrosswordView = (props) => {
   return (
     <View style={styles.container}>
           <View style={(window.height > 811 && window.width < 415) ? styles.tallTopBar : styles.topBar} >
-            <TouchableOpacity
-              style={ styles.buoyButton }
-              onPress={() => { 
-                setOpenActionSheet(true);
-              }}
-            >
-              <Ionicons name="ios-help-buoy" size={40} color="#007AFF" style={window.height > 740 && {marginTop: 3}} />
-            </TouchableOpacity>
+            {/*<Ionicons name="ios-help-buoy" size={40} color="#007AFF" style={window.height > 740 && {marginTop: 3}} />*/}
+  <Text style={styles.timer}>{Math.floor(props.timer/60)}:{props.timer%60<10 && 0}{props.timer%60}</Text>
             <Button 
                 style={styles.newGameButton}
                 title="New Game" 
@@ -149,10 +143,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 15,
   },
-  buoyButton: {
-    color: 'red',
+  timer: {
     flex: 1,
-    paddingHorizontal: 5 
+    paddingHorizontal: 10,
+    color: '#2196F3',
+    fontSize: 18
   },
   helpDropdown: {
     alignItems: 'center',
@@ -228,7 +223,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
     fontSize: 20,
-    color: 'green',
+    color: '#1ec31e',
     fontWeight:'bold'
   }
 });

@@ -261,7 +261,7 @@ class Grid extends Component {
     
     gridVals[row] && (gridVals[row][col] = value);
     
-    
+  
     // check if victory is achieved
     if (gridVals[0] && gridVals.length === this.state.goalGridValues.length && gridVals[0].length == this.state.goalGridValues[0].length) {
         let foundDiffference = false;

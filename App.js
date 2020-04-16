@@ -30,7 +30,8 @@ class App extends Component {
     scores: [],
     contactsPermissionsDenied: false,
     loadInterstitialFlag: false,
-    isHighScore: false
+    isHighScore: false,
+    timer: 0
   }
 
   componentDidMount() {
@@ -54,6 +55,15 @@ class App extends Component {
         }
       })();
     }
+    this._interval = setInterval(() => {
+      this.setState({timer: this.state.timer+1});
+      console.log(Math.floor(this.state.timer/60),':',this.state.timer%60);
+
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._interval);
   }
 
   getContacts = () => {
@@ -150,6 +160,7 @@ class App extends Component {
               scores={this.state.scores}
               addScore={this.addScore}
               isHighScore={this.state.isHighScore}
+              timer={this.state.timer}
             />
           </ActionSheetProvider>
         ) : (
