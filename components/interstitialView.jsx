@@ -7,12 +7,24 @@ AdMobInterstitial.setAdUnitID("ca-app-pub-6643827733570457/5527903824"); // test
 
 class InterstitialView extends Component {
     componentDidMount() {
-         // load interstitial ad
+        // load interstitial ad
         (async () => {
             //AdMobInterstitial.setTestDeviceID('EMULATOR');
             await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
         })();
-      }  
+        AdMobInterstitial.addEventListener('interstitialDidClose',
+            () => {
+              this.props.interstitialDidClose();
+              (async () => {
+              //AdMobInterstitial.setTestDeviceID('EMULATOR');
+              await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
+          })();}
+        );
+    }
+    
+    componentWillUnmount() {
+      AdMobInterstitial.removeAllListeners();
+    }
   
     componentDidUpdate(prevProps) {
         if (this.props.loadInterstitialFlag !== prevProps.loadInterstitialFlag && !(prevProps.loadInterstitialFlag === null)) {
@@ -24,18 +36,12 @@ class InterstitialView extends Component {
   openInterstitial = async () => {
     try {
       console.log('trying to open interstatial')
-      await AdMobInterstitial.showAdAsync();
+      if (await AdMobInterstitial.getIsReadyAsync()) {
+        await AdMobInterstitial.showAdAsync();
+      }
     } catch (error) {
       console.error(error)
-    } finally {
-      try {
-        // load next ad
-        console.log('loading next one')
-        await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
-      } catch (error) {
-        console.error(error)
-      }
-    }
+    } 
   }
 
   render() {

@@ -22,13 +22,13 @@ const window = Dimensions.get("window");
 const CrosswordView = (props) => {
   const didMountRef = React.useRef(false);
   
-  const [currentWordIndex, setCurrentWordIndex] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
   const [completedScore, setCompletedScore] = React.useState(0);
   const [openActionSheet, setOpenActionSheet] = React.useState(false);
   const [onlyDismissedModal, setOnlyDismissedModal] = React.useState(false);
 
-  const gameOver = (lettersChecked) => {
+  const gameOver = (lettersChecked, lettersCorrect) => {
+    console.log('gameOver lettersCorrect: ',lettersCorrect)
     setCompletedScore(1000-(30*lettersChecked));
     props.addScore(1000-(30*lettersChecked))
     setModalVisible(!modalVisible);
@@ -90,7 +90,7 @@ const CrosswordView = (props) => {
         <Grid
           grid={props.grid}
           words={props.words}
-          setCurrentWordIndex={setCurrentWordIndex}
+          setCurrentWordIndex={props.turnOnTimer}
           gameOver={gameOver}
           openActionSheet={openActionSheet}
           resetActionSheetCall={() => setOpenActionSheet(false)}

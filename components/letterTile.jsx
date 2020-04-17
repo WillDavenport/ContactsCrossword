@@ -108,8 +108,9 @@ class LetterTile extends Component {
     if (e.nativeEvent.key === "Backspace") {
       if (this.state.value === '') { // already nothing here so delete key behind
         this.props.setNextFocus(this.props.rowIndex, this.props.index, -1);
+      } else {
+        this.props.setValue(this.props.rowIndex, this.props.index, "");
       }
-      this.props.setValue(this.props.rowIndex, this.props.index, "");
       this.setState({ value: "" });
     } else {
         this.props.setValue(

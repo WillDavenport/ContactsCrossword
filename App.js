@@ -9,6 +9,7 @@ import { AsyncStorage } from 'react-native';
 import * as Analytics from 'expo-firebase-analytics'; 
 import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 import InterstitialView from './components/interstitialView';
+import * as StoreReview from 'expo-store-review';
 
 Analytics.logEvent('share', {
   contentType: 'text', 
@@ -31,7 +32,8 @@ class App extends Component {
     contactsPermissionsDenied: false,
     loadInterstitialFlag: false,
     isHighScore: false,
-    timer: 0
+    timer: 0,
+    isTimerOn: true
   }
 
   componentDidMount() {
@@ -56,8 +58,9 @@ class App extends Component {
       })();
     }
     this._interval = setInterval(() => {
-      this.setState({timer: this.state.timer+1});
-      console.log(Math.floor(this.state.timer/60),':',this.state.timer%60);
+      if (this.state.isTimerOn) {
+        this.setState({timer: this.state.timer+1});
+      }
 
     }, 1000);
   }
@@ -104,8 +107,14 @@ class App extends Component {
       this.generateGame(this.state.contacts, 10,10);
     }
 
-    // Display an interstitial
-    this.setState({loadInterstitialFlag: !this.state.loadInterstitialFlag})
+    // ask for a review after the 5th game
+    if (this.state.scores.length === 5){
+      StoreReview.requestReview();
+      this.setState({timer: 0, isTimerOn: false})
+    } else {
+      // Display an interstitial
+      this.setState({loadInterstitialFlag: !this.state.loadInterstitialFlag, timer: 0})
+    }
   }
   
   addScore = (score) => {
@@ -125,7 +134,8 @@ class App extends Component {
         }
         this.setState({
           scores,
-          isHighScore: score == scores[0]
+          isHighScore: score == scores[0],
+          isTimerOn: false
         });
         try { // put new scores in storage
           await AsyncStorage.setItem('scores', JSON.stringify(scores));
@@ -138,11 +148,14 @@ class App extends Component {
         console.log(error)
       }
     })();
-    
     /*let scoresList = this.state.scores;
     scoresList.push(score);
     scoresList.sort((a, b) => b - a); // sort scores descending
     this.setState({scores: scoresList});*/
+  }
+
+  interstitialDidClose = () => {
+    this.setState({timer: 0, isTimerOn: true});
   }
 
   render() { 
@@ -150,6 +163,7 @@ class App extends Component {
       <View style={styles.container}>
         <InterstitialView 
           loadInterstitialFlag={this.state.loadInterstitialFlag}
+          interstitialDidClose={this.interstitialDidClose}
         />
         {this.state.haveGrid ? (
           <ActionSheetProvider>
@@ -161,6 +175,7 @@ class App extends Component {
               addScore={this.addScore}
               isHighScore={this.state.isHighScore}
               timer={this.state.timer}
+              turnOnTimer={() => this.setState({isTimerOn: true})}
             />
           </ActionSheetProvider>
         ) : (

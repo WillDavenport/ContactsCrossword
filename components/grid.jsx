@@ -17,6 +17,7 @@ class Grid extends Component {
     victory: false,
     checkedLetters: {},
     lettersChecked: 0,
+    lettersCorrect: 0,
   }
 
   componentDidMount() {
@@ -152,10 +153,11 @@ class Grid extends Component {
         }
       }
     }
-    this.props.gameOver(numLettersChecked);
+    this.props.gameOver(numLettersChecked, this.state.lettersCorrect);
     this.setState({
       victory: true,
       lettersChecked: 0,
+      lettersCorrect: 0,
       focusedWordIndex: -1,
       focusedRowIndex: -1,
       focusedLetterIndex: -1,
@@ -199,10 +201,11 @@ class Grid extends Component {
               }
           }
           if (!foundDiffference) {
-              this.props.gameOver(this.state.lettersChecked);
+              this.props.gameOver(this.state.lettersChecked, this.state.lettersCorrect);
               this.setState({
                 victory: true,
                 lettersChecked: 0,
+                lettersCorrect: 0,
                 focusedWordIndex: -1,
                 focusedRowIndex: -1,
                 focusedLetterIndex: -1,
@@ -238,10 +241,11 @@ class Grid extends Component {
                 }
             }
             if (!foundDiffference) {
-                this.props.gameOver(this.state.lettersChecked);
+                this.props.gameOver(this.state.lettersChecked, this.state.lettersCorrect);
                 this.setState({
                   victory: true,
                   lettersChecked: 0,
+                  lettersCorrect: 0,
                   focusedWordIndex: -1,
                   focusedRowIndex: -1,
                   focusedLetterIndex: -1,
@@ -251,41 +255,58 @@ class Grid extends Component {
             }
         }
       }
-      // move to next letter focus
-      this.setNextFocus(rowIndex, letterIndex, 1);
     }
+    // move to next letter focus
+    this.setNextFocus(rowIndex, letterIndex, 1);
   }
 
   setGridVal = (row, col, value) => {
-    let gridVals = this.state.gridValues;
-    
-    gridVals[row] && (gridVals[row][col] = value);
-    
-  
-    // check if victory is achieved
-    if (gridVals[0] && gridVals.length === this.state.goalGridValues.length && gridVals[0].length == this.state.goalGridValues[0].length) {
-        let foundDiffference = false;
-        for (var r = 0; r < this.props.grid.length; r++) {
-            for(var c = 0; c < this.props.grid[0].length; c++) {
-                if (gridVals[r][c] != this.state.goalGridValues[r][c] && !(this.state.checkedLetters[r+','+c])) {
-                    foundDiffference = true;
-                }
-            }
+    if (!this.state.checkedLetters[row+','+col]) {
+      console.log('setting grid val: ', value,' row: ',row, ', col: ',col)
+      let gridVals = this.state.gridValues;
+      
+      let changeToLettersCorrect = 0;
+      if (value == this.state.goalGridValues[row][col]) { // this one is right
+        if (this.state.gridValues[row][col] != this.state.goalGridValues[row][col]) { // used to be wrong
+          console.log('changeToLettersCorrect = 1')
+          changeToLettersCorrect = 1;
         }
-        if (!foundDiffference) {
-            this.props.gameOver(this.state.lettersChecked);
-            this.setState({
-              victory: true,
-              lettersChecked: 0,
-              focusedWordIndex: -1,
-              focusedRowIndex: -1,
-              focusedLetterIndex: -1,
-              isCurrentFocusVertical: false,
-              nextFocusIndex: [],
-            })
+      } else { 
+        if (this.state.gridValues[row][col] == this.state.goalGridValues[row][col]) { // used to be right, now wrong
+          changeToLettersCorrect = -1;
+          console.log('changeToLettersCorrect = -1')
         }
+      }
+      
+      gridVals[row] && (gridVals[row][col] = value);
+    
+      // check if victory is achieved
+      if (gridVals[0] && gridVals.length === this.state.goalGridValues.length && gridVals[0].length == this.state.goalGridValues[0].length) {
+          let foundDiffference = false;
+          for (var r = 0; r < this.props.grid.length; r++) {
+              for(var c = 0; c < this.props.grid[0].length; c++) {
+                  if (gridVals[r][c] != this.state.goalGridValues[r][c] && !(this.state.checkedLetters[r+','+c])) {
+                      foundDiffference = true;
+                  }
+              }
+          }
+          if (!foundDiffference) {
+              this.props.gameOver(this.state.lettersChecked, this.state.lettersCorrect);
+              this.setState({
+                victory: true,
+                lettersChecked: 0,
+                lettersCorrect: 0,
+                focusedWordIndex: -1,
+                focusedRowIndex: -1,
+                focusedLetterIndex: -1,
+                isCurrentFocusVertical: false,
+                nextFocusIndex: [],
+              })
+          }
+      }
+      console.log('setting letters correct: ',this.state.lettersCorrect + changeToLettersCorrect)
+      this.setState({gridValues: gridVals, lettersCorrect: this.state.lettersCorrect + changeToLettersCorrect});
     }
-    this.setState({gridValues: gridVals});
   }
   
   render() { 
