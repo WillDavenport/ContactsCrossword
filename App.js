@@ -10,6 +10,7 @@ import * as Analytics from 'expo-firebase-analytics';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 import InterstitialView from './components/interstitialView';
 import * as StoreReview from 'expo-store-review';
+import * as Device from 'expo-device';
 
 Analytics.logEvent('share', {
   contentType: 'text', 
@@ -37,6 +38,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    console.log('Device: ',Device.brand)
     if(!this.state.contacts[0] && !this.state.haveGrid) {
       (async () => {
         const { status } = await Contacts.requestPermissionsAsync();

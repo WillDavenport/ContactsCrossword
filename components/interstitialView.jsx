@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { View, StatusBar } from 'react-native';
 import { AdMobInterstitial } from "expo-ads-admob";
+import * as Device from 'expo-device';
 
-AdMobInterstitial.setAdUnitID("ca-app-pub-6643827733570457/5527903824"); // test ad, real ad unit id ca-app-pub-6643827733570457/5527903824
+const adMobUnitId = Device.brand == "Apple" ? "ca-app-pub-3940256099942544/4411468910" : "ca-app-pub-3940256099942544/4411468910";
+
+AdMobInterstitial.setAdUnitID(adMobUnitId); // test ad, real ad unit id (iOS) ca-app-pub-6643827733570457/5527903824
                                                                         // test id: ca-app-pub-3940256099942544/4411468910
 
 class InterstitialView extends Component {
@@ -23,7 +26,7 @@ class InterstitialView extends Component {
     }
     
     componentWillUnmount() {
-      AdMobInterstitial.removeAllListeners();
+      AdMobInterstitial.removeEventListener('interstitialDidClose');
     }
   
     componentDidUpdate(prevProps) {

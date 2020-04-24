@@ -12,6 +12,7 @@
     "expo": "^37.0.0",
     "expo-ads-admob": "~8.1.0",
     "expo-contacts": "~8.1.0",
+    "expo-device": "~2.1.0",
     "expo-firebase-analytics": "~2.1.0",
     "expo-firebase-core": "~1.0.0",
     "expo-store-review": "~2.1.0",

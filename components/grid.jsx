@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tallGrid: {
-    flex: 12,
+    flex: 8,
     width: '100%',
     backgroundColor: '#fff',
     alignItems: 'center',

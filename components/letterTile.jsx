@@ -9,6 +9,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import * as Device from 'expo-device';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -166,6 +167,7 @@ class LetterTile extends Component {
           onKeyPress={this.onKeyPress}
           ref={this.inputRef}
         />
+        {Device.brand == 'Apple' && 
         <InputAccessoryView
           nativeID={this.props.index + "," + this.props.rowIndex}
         >
@@ -186,7 +188,7 @@ class LetterTile extends Component {
               <Ionicons name="ios-help-buoy" size={40} color="#007AFF" style={{marginTop: 5}} />
             </TouchableOpacity>
           </View>
-        </InputAccessoryView>
+        </InputAccessoryView>}
       </View>
     ) : (
       <View style={styles.blankTile} />
@@ -221,7 +223,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   letterTile_checkedWrong: {
-    backgroundColor: "red",
+    backgroundColor: "#ff4c4c",
     fontWeight: 'bold'
   },
   blankTile: {
