@@ -88,6 +88,7 @@ const CrosswordView = (props) => {
                           <Text style={styles.modalCongratulationsText}>Congratulations!</Text>
                           {props.isHighScore && (<Text style={styles.modalText}>New High Score!</Text>)}
                           <View style={styles.scoreBox}>
+                            <View style={styles.scoreBoxMultiplication}>
                             <View style={{flexDirection: 'column'}}>
                               <Text style={styles.modalText_scoreBox}>Letter Score</Text>
                               <Text style={styles.modalText_scoreBoxScore}>{completedLetterScore} </Text>
@@ -97,12 +98,9 @@ const CrosswordView = (props) => {
                               <Text style={styles.modalText_scoreBox}>Time Multiplier</Text>
                               <Text style={styles.modalText_scoreBoxScore}>{completedTimeMultiplier} </Text>
                             </View>
+                            </View>
+                            <Text style={styles.modalText}>You're score: <Text style={{color: '#1ec31e',fontWeight:'bold'}}>{completedScore}</Text></Text>
                           </View>
-                          <Text style={styles.modalText}>You're score: <Text style={{color: '#1ec31e',fontWeight:'bold'}}>{completedScore}</Text></Text>
-                          <Text style={styles.modalText}>You're top scores</Text>
-                          {props.scores[0] && (<Text style={(props.scores[0] === completedScore) ? styles.thisScoreText : styles.modalText}>1.  {props.scores[0]}</Text>)}
-                          {props.scores[1] && (<Text style={(props.scores[1] === completedScore) ? styles.thisScoreText : styles.modalText}>2.  {props.scores[1]}</Text>)}
-                          {props.scores[2] && (<Text style={(props.scores[2] === completedScore) ? styles.thisScoreText : styles.modalText}>3.  {props.scores[2]}</Text>)}
                           <TouchableHighlight
                             style={ styles.modalNewGameButton }
                             onPress={() => {
@@ -340,16 +338,18 @@ const styles = StyleSheet.create({
     color: '#D4AF37'
   },
   scoreBox: {
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#ededed',
     borderWidth: 1,
     borderRadius: 8,
     padding: 15,
     fontSize: 18,
     marginBottom: 10
+  },
+  scoreBoxMultiplication: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   modalNewGameButton: {
     backgroundColor: "#2196F3",
@@ -363,9 +363,11 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   modalText: {
-    marginBottom: 15,
+    marginTop: 22,
+    marginBottom: 10,
     textAlign: "center",
-    fontSize: 20
+    fontSize: 20,
+    fontWeight: 'bold'
   },
   modalText_scoreBox: {
     marginBottom: 10,
