@@ -83,7 +83,11 @@ class App extends Component {
           let formattedContacts = trimContactsData(data);
           this.setState({contacts: formattedContacts});
           
-          this.generateGame(formattedContacts, 10, 10);
+          if (window.width > 750) { // iPad width
+            this.generateGame(this.state.contacts, 12,16);
+          } else {
+            this.generateGame(this.state.contacts, 10,10);
+          }
         }
         this.setState({contactsPermissionsDenied: false})
       }

@@ -3,7 +3,7 @@ import { View, StatusBar } from 'react-native';
 import { AdMobInterstitial } from "expo-ads-admob";
 import * as Device from 'expo-device';
 
-const adMobUnitId = Device.brand == "Apple" ? "ca-app-pub-3940256099942544/4411468910" : "ca-app-pub-3940256099942544/4411468910";
+const adMobUnitId = Device.brand == "Apple" ? "ca-app-pub-6643827733570457/5527903824" : "ca-app-pub-3940256099942544/4411468910";
 
 AdMobInterstitial.setAdUnitID(adMobUnitId); // test ad, real ad unit id (iOS) ca-app-pub-6643827733570457/5527903824
                                                                         // test id: ca-app-pub-3940256099942544/4411468910
