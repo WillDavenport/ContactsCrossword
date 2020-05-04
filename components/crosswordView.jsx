@@ -125,7 +125,7 @@ const CrosswordView = (props) => {
         (<View style={[styles.bottomScoreboard, (window.height > 811 && window.width < 415) ? styles.tallBottomFlex : (window.height < 810) ? styles.shortBottomFlex :styles.bottomFlex]}>
           {window.height < 810 ? (
           <View>
-          <Text style={styles.bottomScoreboardTopScoresText}>You're top scores</Text>
+          <Text style={styles.bottomScoreboardTopScoresText}>Your top scores</Text>
           <View style={{flexDirection:'row'}}>
             <View style={{flexDirection:'column', flex: 1}}>
           <View style={{flexDirection:'row'}}>
