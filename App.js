@@ -121,7 +121,7 @@ class App extends Component {
           fields: [Contacts.Fields.Emails],
         });
 
-        if (data.length > 0) {
+        if (data.length > 2) {
           let formattedContacts = trimContactsData(data);
           this.setState({contacts: formattedContacts});
           

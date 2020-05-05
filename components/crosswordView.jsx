@@ -99,7 +99,7 @@ const CrosswordView = (props) => {
                               <Text style={styles.modalText_scoreBoxScore}>{completedTimeMultiplier} </Text>
                             </View>
                             </View>
-                            <Text style={styles.modalText}>You're score: <Text style={{color: '#1ec31e',fontWeight:'bold'}}>{completedScore}</Text></Text>
+                            <Text style={styles.modalText}>Your score: <Text style={{color: '#1ec31e',fontWeight:'bold'}}>{completedScore}</Text></Text>
                           </View>
                           <TouchableHighlight
                             style={ styles.modalNewGameButton }
@@ -171,7 +171,7 @@ const CrosswordView = (props) => {
             <Text style={(props.scores[9] === completedScore) ? styles.bottomScoreboardThisScoreText : styles.bottomScoreboardText}>{props.scores[9]}</Text>
           </View></View></View></View>
           ) : (
-          <View><Text style={styles.bottomScoreboardTopScoresText}>You're top scores</Text>
+          <View><Text style={styles.bottomScoreboardTopScoresText}>Your top scores</Text>
           <View style={{flexDirection:'row'}}>
             <Text style={styles.bottomScoreboardNumber}>1.</Text>
             <Text style={(props.scores[0] === completedScore) ? styles.bottomScoreboardThisScoreText : styles.bottomScoreboardText}>{props.scores[0]}</Text>
