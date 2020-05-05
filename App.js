@@ -38,7 +38,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log('Device: ',Device.brand)
     if(!this.state.contacts[0] && !this.state.haveGrid) {
       (async () => {
         const { status } = await Contacts.requestPermissionsAsync();
@@ -48,6 +47,49 @@ class App extends Component {
           });
   
           if (data.length > 0) {
+            let formattedContacts = trimContactsData(data);
+            this.setState({contacts: formattedContacts});
+            
+            this.generateGame(formattedContacts, 10, 10);
+          } else {
+            let data = [
+              {
+                firstName: 'Jack Johnson'
+              },
+              {
+                firstName: 'John Smith'
+              },
+              {
+                firstName: 'Alicia Keyes'
+              },
+              {
+                firstName: 'Steve Jobs'
+              },
+              {
+                firstName: 'Alice Wonderland'
+              },
+              {
+                firstName: 'Sarah Allen'
+              },
+              {
+                firstName: 'Anna Hendricks'
+              },
+              {
+                firstName: 'Martha Stewart'
+              },
+              {
+                firstName: 'Oprah Winfrey'
+              },
+              {
+                firstName: 'Tiger Woods'
+              },
+              {
+                firstName: 'Alfred Pacino'
+              },
+              {
+                firstName: 'Margot Robbie'
+              },
+            ]
             let formattedContacts = trimContactsData(data);
             this.setState({contacts: formattedContacts});
             
