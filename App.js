@@ -186,17 +186,15 @@ class App extends Component {
           </ActionSheetProvider>
         ) : (
           <View>
-            {this.state.contactsPermissionsDenied && (
-              <View style={styles.container}>
-                <Text style={styles.askText}>
-                  Contacts Crossword Requires Access to your contacts in order to create your crosswords. <Text style={styles.askTextBold}>Please go to Contacts Crossword in your settings app</Text> and allow contacts access.
-                </Text>
-                <Image style={styles.settingsImage} source={require('./assets/settingsAppIcon.png')} />
-                <Text style={styles.directionsText}>
-                  Settings > Contacts Crossword > Allow Contacts
-                </Text>
-              </View>
-            )}
+            <View style={styles.container}>
+              <Text style={styles.askText}>
+                Contacts Crossword Requires Access to your contacts in order to create your crosswords. <Text style={styles.askTextBold}>Please go to Contacts Crossword in your settings app</Text> and allow contacts access.
+              </Text>
+              <Image style={styles.settingsImage} source={require('./assets/settingsAppIcon.png')} />
+              <Text style={styles.directionsText}>
+                Settings > Contacts Crossword > Allow Contacts
+              </Text>
+            </View>
           </View>
         )}
       </View>
