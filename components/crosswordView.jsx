@@ -55,8 +55,12 @@ const CrosswordView = (props) => {
   }
 
   const newGamePressed = () => {
-    props.newGamePressed();
-    setVictory(false);
+    if (victory) {
+      props.newGamePressed(true);
+      setVictory(false);
+    } else {
+      props.newGamePressed(false);
+    }
   }
   
   return (

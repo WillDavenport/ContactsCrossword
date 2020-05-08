@@ -148,20 +148,24 @@ class App extends Component {
     this.setState({haveGrid: true});
   }
 
-  newGame = () => {
+  newGame = (victory) => {
     if (window.width > 750) { // iPad width
       this.generateGame(this.state.contacts, 12,16);
     } else {
       this.generateGame(this.state.contacts, 10,10);
     }
 
-    // ask for a review after the 5th game
-    if (this.state.scores.length === 5){
-      StoreReview.requestReview();
-      this.setState({timer: 0, isTimerOn: false})
+    if (victory) {
+      // ask for a review after the 5th game
+      if (this.state.scores.length === 5){
+        StoreReview.requestReview();
+        this.setState({timer: 0, isTimerOn: false})
+      } else {
+        // Display an interstitial
+        this.setState({loadInterstitialFlag: !this.state.loadInterstitialFlag, timer: 0})
+      }
     } else {
-      // Display an interstitial
-      this.setState({loadInterstitialFlag: !this.state.loadInterstitialFlag, timer: 0})
+      this.setState({timer: 0})
     }
   }
   
