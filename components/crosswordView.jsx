@@ -220,7 +220,7 @@ const CrosswordView = (props) => {
       :
       (<Text style={(window.height < 810) ? styles.shortHowToStyle : window.width < 415 ? styles.tallHowToStyle : styles.howToStyle}>
         <Text style={{color: '#147efb'}}>How to play:{"\n"}</Text>
-        1. Each word in the crossword (Down or Accross) is either the first or last name of one of your contacts{"\n"}
+        1. Each word in the crossword (Down or Across) is either the first or last name of one of your contacts{"\n"}
         2. The clue for the current word is shown above the keyboard{"\n"}
         3. Double tap on a square to switch direction{"\n"}
         4. If you need help, click on the <Ionicons name="ios-help-buoy" size={24} color="#147efb" /> icon above to reveal a letter, word, or the rest of the puzzle{"\n"}
